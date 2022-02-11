@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl = 2
 
-include { download_prereq_data, star_full_index } from './subworkflows'
+include { download_prereq_data; star_full_index } from './subworkflows'
 
 workflow {
   download_prereq_data()
