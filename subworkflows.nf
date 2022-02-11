@@ -2,8 +2,8 @@
 
 nextflow.enable.dsl = 2
 
-include { download_testdata_1k, download_testdata_5k, download_reference, download_barcodes } from './download_prereqs.nf'
-include { full_star_index, sparse_star_index, run_starsolo } from './run-star.nf'
+include { download_testdata_1k, download_testdata_5k, download_reference, download_barcodes } from './download_prereqs'
+include { full_star_index, sparse_star_index, run_starsolo } from './run-star'
 
 /*
  * Download prerequisites and emit their resulting downloads.
