@@ -29,6 +29,33 @@ workflow download_prereqs {
  */
  workflow star_full_index {
     take:
+      genome
+      gtf
+      read1_files
+      read2_files
+      barcode_list
     main:
+      full_star_index(genome, gtf)
+      run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out)
     emit:
+      star_solo_dir = run_starsolo.out[0]
+      star_log_files = run_starsolo.out[1]
  }
+
+ /*
+  * Run STAR alignment on the sparse genome index.
+  */
+  workflow star_sparse_index {
+     take:
+       genome
+       gtf
+       read1_files
+       read2_files
+       barcode_list
+     main:
+       sparse_star_idx(genome, gtf)
+       run_starsolo(read1_files, read2_files, barcode_list, sparse_star_idx.out)
+     emit:
+       star_solo_dir = run_starsolo.out[0]
+       star_log_files = run_starsolo.out[1]
+  }
