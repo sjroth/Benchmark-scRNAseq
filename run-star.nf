@@ -12,12 +12,12 @@ process full_star_index {
     file gtf
 
   output:
-    path 'full_star_idx', emit: genome_idx
+    path 'genome_idx', emit: genome_idx
 
   script:
     """
-    mkdir genome_full_idx
-    STAR --runMode genomeGenerate --runThreadN ${task.cpus} --genomeDir full_star_idx --genomeFastaFiles $genome --sjdbGTFfile $gtf
+    mkdir genome_idx
+    STAR --runMode genomeGenerate --runThreadN ${task.cpus} --genomeDir genome_idx --genomeFastaFiles $genome --sjdbGTFfile $gtf
     """
 
 }
@@ -32,12 +32,12 @@ process sparse_star_index {
     file gtf
 
   output:
-    path 'sparse_star_idx', emit: genome_idx
+    path 'genome_idx', emit: genome_idx
 
   script:
     """
-    mkdir genome_full_idx
-    STAR --runMode genomeGenerate --runThreadN ${task.cpus} --genomeDir sparse_star_idx --genomeFastaFiles $genome --sjdbGTFfile $gtf --genomeSAsparseD 3
+    mkdir genome_idx
+    STAR --runMode genomeGenerate --runThreadN ${task.cpus} --genomeDir genome_idx --genomeFastaFiles $genome --sjdbGTFfile $gtf --genomeSAsparseD 3
     """
 
 }
