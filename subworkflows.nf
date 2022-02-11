@@ -53,7 +53,7 @@ workflow download_prereqs {
        read2_files
        barcode_list
      main:
-       sparse_star_idx(genome, gtf)
+       sparse_star_index(genome, gtf)
        run_starsolo(read1_files, read2_files, barcode_list, sparse_star_idx.out)
      emit:
        star_solo_dir = run_starsolo.out[0]

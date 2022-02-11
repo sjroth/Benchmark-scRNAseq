@@ -1,0 +1,35 @@
+process {
+  withName: download_testdata_1k {
+    container = 'sjroth1029/cellranger:6.1.2'
+    cpus = 1
+  }
+  withName: download_testdata_5k {
+    container = 'sjroth1029/cellranger:6.1.2'
+    cpus = 1
+  }
+  withName: download_reference {
+    container = 'sjroth1029/cellranger:6.1.2'
+    cpus = 1
+  }
+  withName: download_barcodes {
+    container = 'sjroth1029/cellranger:6.1.2'
+    cpus = 1
+  }
+  withName: full_star_index {
+    container = 'sjroth1029/star:2.7.10a'
+    cpus = 16
+  }
+  withName: sparse_star_index {
+    container = 'sjroth1029/star:2.7.10a'
+    cpus = 16
+  }
+  withName: run_starsolo {
+    container = 'sjroth1029/star:2.7.10a'
+    cpus = 16
+  }
+}
+
+docker {
+  enabled = true
+  sudo = true
+}
