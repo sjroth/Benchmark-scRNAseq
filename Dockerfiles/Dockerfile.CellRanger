@@ -1,0 +1,14 @@
+# Use Ubuntu 21.04 as a base image.
+FROM ubuntu:21.04
+
+# Install wget.
+RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive apt-get -y install wget
+
+# Download and install Cellranger.
+RUN cd /opt && \
+wget -O cellranger-6.1.2.tar.gz "https://cf.10xgenomics.com/releases/cell-exp/cellranger-6.1.2.tar.gz?Expires=1642683545&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jZi4xMHhnZW5vbWljcy5jb20vcmVsZWFzZXMvY2VsbC1leHAvY2VsbHJhbmdlci02LjEuMi50YXIuZ3oiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE2NDI2ODM1NDV9fX1dfQ__&Signature=EImSJcacbCBNkpZM8jSH65aENibtU3A0ZUSWBdfmk7FHS6wqT2tlpeL2e8pvTxp0TSEnZZ07I0f6X~xOb-9fTa7K7~u1Tyirsh2gCFeHJIpy5vZhhX3ZVJbcUaitYu4ucQUedIQCCKS9RzdhQyFQdghBlnSLliMi5kkdl4ujpqQNajoQDf7NS27K204uhq-bzCG5J0kbrCOtboVoIzwjVQb2uhxB99Iw8RO0uvwcBLAgwluUONre-jabeNcFD4shU8Lxy5YfO0g8NqSX96vfgxzYas2NQaCT~~ZI7mQexAgICz9vv3NXCb09A19c1-C5H18T6nQWjAUFHoZ9eTpWmg__&Key-Pair-Id=APKAI7S6A5RYOXBWRPDA" && \
+tar -xzvf cellranger-6.1.2.tar.gz && \
+rm cellranger-6.1.2.tar.gz
+
+# Set the path variable.
+ENV PATH="/opt/cellranger-6.1.2:${PATH}"
