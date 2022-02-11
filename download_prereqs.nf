@@ -45,8 +45,8 @@ process download_reference {
 
   output:
     path "refdata-gex-GRCh38-2020-A/", emit: cellranger_reference
-    file "refdata-gex-GRCh38-2020-A/fasta/genome.fa", emit: cellranger_genome
-    file "refdata-gex-GRCh38-2020-A/genes/genes.gtf", emit: cellranger_gtf
+    path "refdata-gex-GRCh38-2020-A/fasta/genome.fa", emit: cellranger_genome
+    path "refdata-gex-GRCh38-2020-A/genes/genes.gtf", emit: cellranger_gtf
 
   script:
     """
@@ -61,7 +61,7 @@ process download_reference {
 process download_barcodes {
 
   output:
-    file "3M-february-2018.txt", emit: barcode_list
+    path "3M-february-2018.txt", emit: barcode_list
   script:
     """
     wget https://github.com/10XGenomics/cellranger/raw/master/lib/python/cellranger/barcodes/3M-february-2018.txt.gz
