@@ -36,10 +36,10 @@ workflow download_prereq_data {
       barcode_list
     main:
       full_star_index(genome, gtf)
-      run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out)
+      run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out.genome_idx)
     emit:
-      star_solo_dir = run_starsolo.out[0]
-      star_log_files = run_starsolo.out[1]
+      star_solo_dir = run_starsolo.out.star_solo_dir
+      star_log_files = run_starsolo.out.star_log_files
  }
 
  /*
@@ -54,8 +54,8 @@ workflow download_prereq_data {
        barcode_list
      main:
        sparse_star_index(genome, gtf)
-       run_starsolo(read1_files, read2_files, barcode_list, sparse_star_idx.out)
+       run_starsolo(read1_files, read2_files, barcode_list, sparse_star_idx.out.genome_idx)
      emit:
-       star_solo_dir = run_starsolo.out[0]
-       star_log_files = run_starsolo.out[1]
+       star_solo_dir = run_starsolo.out.star_solo_dir
+       star_log_files = run_starsolo.out.star_log_files
   }
