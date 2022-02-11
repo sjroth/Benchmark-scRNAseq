@@ -55,7 +55,7 @@ process run_starsolo {
 
   output:
     path 'Solo.out', emit: star_solo_dir
-    tuple file('Log.final.out'), file('Log.out'), file('Log.progress.out'), file('SJ.out.tab'), emit: star_log_files
+    tuple path('Log.final.out'), path('Log.out'), path('Log.progress.out'), path('SJ.out.tab'), emit: star_log_files
 
   script:
     all_r1 = "${read1_files.join(',')}"
