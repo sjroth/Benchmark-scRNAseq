@@ -11,17 +11,17 @@ include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 workflow download_prereq_data {
   main:
     download_testdata_1k()
-    // download_reference()
-    // download_barcodes()
-  // emit:
-    //1k_fastq_dir = download_testdata_1k.out[0]
-    //1k_read1_files = download_testdata_1k.out[1]
-    //1k_read2_files = download_testdata_1k.out[2]
-    //1k_index_files = download_testdata_1k.out[3]
-    // cellranger_reference = download_reference.out[0]
-    // cellranger_genome = download_reference.out[1]
-    // cellranger_gtf = download_reference.out[2]
-    // barcode_list = download_barcodes.out
+    download_reference()
+    download_barcodes()
+  emit:
+    fastq_dir_1k = download_testdata_1k.out.fastq_dir
+    read1_files_1k = download_testdata_1k.out.read1_files
+    read2_files_1k = download_testdata_1k.out.read2_files
+    index_files_1k = download_testdata_1k.out.index_files
+    cellranger_reference = download_reference.out.cellranger_reference
+    cellranger_genome = download_reference.out.cellranger_genome
+    cellranger_gtf = download_reference.out.cellranger_gtf
+    barcode_list = download_barcodes.out.barcode_list
 }
 
 /*

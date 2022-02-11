@@ -12,7 +12,7 @@ process full_star_index {
     file gtf
 
   output:
-    path 'full_star_idx'
+    path 'full_star_idx', emit: genome_idx
 
   script:
     """
@@ -32,7 +32,7 @@ process sparse_star_index {
     file gtf
 
   output:
-    path 'sparse_star_idx'
+    path 'sparse_star_idx', emit: genome_idx
 
   script:
     """
@@ -54,8 +54,8 @@ process run_starsolo {
     path genome_idx
 
   output:
-    path 'Solo.out'
-    tuple file('Log.final.out'), file('Log.out'), file('Log.progress.out'), file('SJ.out.tab')
+    path 'Solo.out', emit: star_solo_dir
+    tuple file('Log.final.out'), file('Log.out'), file('Log.progress.out'), file('SJ.out.tab'), emit: star_log_files
 
   script:
     all_r1 = "${read1_files.join(',')}"
