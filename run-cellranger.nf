@@ -9,7 +9,7 @@ process cellranger_count {
     path fastq_path
 
   output:
-    path 'cellranger-test', emit: cellranger_parent_dir
+    path 'cellranger-test/outs', emit: cellranger_output
 
   script:
     """
