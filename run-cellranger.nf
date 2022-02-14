@@ -2,6 +2,9 @@
 
 nextflow.enable.dsl = 2
 
+/*
+ * Run CellRanger using parameters to maximize speed.
+ */
 process cellranger_count {
 
   input:

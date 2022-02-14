@@ -59,3 +59,14 @@ workflow download_prereq_data {
        star_solo_dir = run_starsolo.out.star_solo_dir
        star_log_files = run_starsolo.out.star_log_files
   }
+
+  workflow run_kallisto {
+    take:
+      genome
+      gtf
+      read1_files
+      read2_files
+    main:
+      kallisto_reference(genome,gtf)
+      run_kb_count(kallisto_reference.out.kallisto_index, kallisto_reference.out.transcripts_to_genes, read1_files, read2_files)
+  }
