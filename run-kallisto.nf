@@ -36,7 +36,7 @@ process run_kb_count {
     all_fastq = [read1_lst, read2_lst].transpose().flatten()
 
     """
-    kb count -i $kallisto_index -g $transcripts_to_genes -x 10XV3 -o kallisto-test -t ${task.cpus} $all_fastq
+    kb count -i $kallisto_index -g $transcripts_to_genes -x 10XV3 -o kallisto-test -t ${task.cpus} ${all_fastq.join(' ')}
     """
 
 }
