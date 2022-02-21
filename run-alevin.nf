@@ -114,7 +114,7 @@ process salmon_sel_mapping {
     path 'salmon-map', emit: salmon_map
   script:
     """
-    salmon alevin -i $salmon_index -p ${task.cpus} -l IU --chromiumV3 -1 $read1_files -2 $read2_files -o salmon-map --tgMap $t2g
+    salmon alevin -i $salmon_index -p ${task.cpus} -l IU --chromiumV3 -1 $read1_files -2 $read2_files -o salmon-map --tgMap $t2g --rad
     """
 }
 
@@ -139,6 +139,20 @@ process generate_permit_list {
     path 'salmon-quant', emit: salmon_quant
   script:
     """
-      alevin-fry generate-permit-list -d fw -k -i $salmon_map -o salmon-quant
+    alevin-fry generate-permit-list -d fw -k -i $salmon_map -o salmon-quant
+    """
+}
+
+process collate_rad_file_and_quant {
+  input:
+    path salmon_quant
+    path salmon_map
+    path t2g
+  output:
+    path 'salmon-quant-res', emit: salmon_quant_res
+  script:
+    """
+    alevin-fry collate -t ${task.cpus} -i $salmon_quant -r $salmon_map
+    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o salmon-quant-res --tg-map $t2g --resolution cr-like --use-mtx
     """
 }

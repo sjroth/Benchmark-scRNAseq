@@ -5,6 +5,7 @@ nextflow.enable.dsl = 2
 include { download_testdata_1k; download_testdata_5k; download_reference; download_barcodes } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
+include { transcriptome; transcript_to_gene; generate_salmon_index; salmon_sel_mapping; generate_permit_list; collate_rad_file_and_quant } from './run-alevin'
 
 /*
  * Download prerequisites and emit their resulting downloads.
@@ -28,49 +29,68 @@ workflow download_prereq_data {
 /*
  * Run STAR alignment on the full genome index.
  */
- workflow star_full_index {
-    take:
-      genome
-      gtf
-      read1_files
-      read2_files
-      barcode_list
-    main:
-      full_star_index(genome, gtf)
-      run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out.genome_idx)
-    emit:
-      star_solo_dir = run_starsolo.out.star_solo_dir
-      star_log_files = run_starsolo.out.star_log_files
- }
+workflow star_full_index {
+  take:
+    genome
+    gtf
+    read1_files
+    read2_files
+    barcode_list
+  main:
+    full_star_index(genome, gtf)
+    run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out.genome_idx)
+  emit:
+    star_solo_dir = run_starsolo.out.star_solo_dir
+    star_log_files = run_starsolo.out.star_log_files
+}
 
  /*
   * Run STAR alignment on the sparse genome index.
   */
-  workflow star_sparse_index {
-     take:
-       genome
-       gtf
-       read1_files
-       read2_files
-       barcode_list
-     main:
-       sparse_star_index(genome, gtf)
-       run_starsolo(read1_files, read2_files, barcode_list, sparse_star_index.out.genome_idx)
-     emit:
-       star_solo_dir = run_starsolo.out.star_solo_dir
-       star_log_files = run_starsolo.out.star_log_files
-  }
+workflow star_sparse_index {
+  take:
+    genome
+    gtf
+    read1_files
+    read2_files
+    barcode_list
+  main:
+    sparse_star_index(genome, gtf)
+    run_starsolo(read1_files, read2_files, barcode_list, sparse_star_index.out.genome_idx)
+  emit:
+    star_solo_dir = run_starsolo.out.star_solo_dir
+    star_log_files = run_starsolo.out.star_log_files
+}
 
 /*
  * Run kallisto pseudoalignment and quantification.
  */
-  workflow run_kallisto {
-    take:
-      genome
-      gtf
-      read1_files
-      read2_files
-    main:
-      kallisto_reference(genome,gtf)
-      run_kb_count(kallisto_reference.out.kallisto_index, kallisto_reference.out.transcripts_to_genes, read1_files, read2_files)
-  }
+workflow run_kallisto {
+  take:
+    genome
+    gtf
+    read1_files
+    read2_files
+  main:
+    kallisto_reference(genome,gtf)
+    run_kb_count(kallisto_reference.out.kallisto_index, kallisto_reference.out.transcripts_to_genes, read1_files, read2_files)
+  emit:
+    kallisto_output = run_kb_count.out.kallisto_output
+}
+
+workflow salmon_cDNA_sel {
+  take:
+    genome
+    gtf
+    read1_files
+    read2_files
+  main:
+    transcriptome(genome,gtf)
+    transcript_to_gene(gtf)
+    generate_salmon_index(transcriptome.out.transcripts)
+    salmon_sel_mapping(generate_salmon_index.out.salmon_index,read1_files,read2_files,transcript_to_gene.out.t2g)
+    generate_permit_list(salmon_sel_mapping.out.salmon_map)
+    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_sel_mapping.out.salmon_map,transcript_to_gene.out.t2g)
+  emit:
+    salmon_out = collate_rad_file_and_quant.out.salmon_quant_res
+}
