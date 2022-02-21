@@ -7,5 +7,5 @@ RUN conda config --add channels bioconda
 RUN conda config --add channels conda-forge
 
 # Install latest version of alevin-fry and clean-up miniconda.
-RUN conda install -c bioconda alevin-fry=0.4.3 -y && \
+RUN conda install -c bioconda alevin-fry=0.5.0 -y && \
    conda clean --all --yes

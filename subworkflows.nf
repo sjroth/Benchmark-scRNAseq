@@ -61,6 +61,9 @@ workflow download_prereq_data {
        star_log_files = run_starsolo.out.star_log_files
   }
 
+/*
+ * Run kallisto pseudoalignment and quantification.
+ */
   workflow run_kallisto {
     take:
       genome
