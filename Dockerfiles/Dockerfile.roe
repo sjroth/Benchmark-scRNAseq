@@ -3,7 +3,7 @@ FROM r-base:4.1.2
 
 # Install necessary ubuntu packages.
 RUN apt-get update && apt-get -y upgrade && DEBIAN_FRONTEND=noninteractive && \
-apt -y install libcurl4-openssl-dev libxml2-dev libcurl4-openssl-dev libssl-dev
+apt -y install libcurl4-openssl-dev libxml2-dev libcurl4-openssl-dev libssl-dev procps
 
 # Install R prerequisites.
 RUN Rscript -e "install.packages('BiocManager',clean=TRUE)" && \

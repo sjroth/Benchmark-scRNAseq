@@ -34,8 +34,8 @@ process splici {
 
     library("roe")
 
-    gtf_path = file.path(${gtf})
-    genome_path = file.path(${genome})
+    gtf_path = file.path('${gtf}')
+    genome_path = file.path('${genome}')
     read_length = 91
     flank_trim_length = 5
 
