@@ -6,7 +6,7 @@ include { download_testdata_1k; download_testdata_5k; download_reference; downlo
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; } from './run-alevin'
-include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './run-alevin'
+include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './alevin-subworkflows'
 
 /*
  * Download prerequisites and emit their resulting downloads.
