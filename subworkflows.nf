@@ -5,7 +5,7 @@ nextflow.enable.dsl = 2
 include { download_testdata_1k; download_testdata_5k; download_reference; download_barcodes } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
-include { transcriptome; transcript_to_gene; generate_salmon_index; salmon_sel_mapping; salmon_sketch_mapping ; generate_permit_list; collate_rad_file_and_quant } from './run-alevin'
+include { transcriptome; transcript_to_gene; splici; generate_salmon_index; salmon_sel_mapping; salmon_sketch_mapping ; generate_permit_list; collate_rad_file_and_quant } from './run-alevin'
 
 /*
  * Download prerequisites and emit their resulting downloads.
@@ -128,5 +128,5 @@ workflow splici_transcriptome {
     remove_t2g_col(splici.out.t2g_3col)
   emit:
     transcripts = splici.out.transcripts
-    t2g = remove_t2g_col.out.t2g 
+    t2g = remove_t2g_col.out.t2g
 }
