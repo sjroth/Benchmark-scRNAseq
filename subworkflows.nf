@@ -5,7 +5,7 @@ nextflow.enable.dsl = 2
 include { download_testdata_1k; download_testdata_5k; download_reference; download_barcodes } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
-include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; salmon_sel_mapping; salmon_sketch_mapping ; generate_permit_list; collate_rad_file_and_quant } from './run-alevin'
+include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; salmon_sel_mapping; salmon_sketch_mapping; salmon_quant as salmon_sel_quant; salmon_quant as salmon_sketch_quant } from './run-alevin'
 
 /*
  * Download prerequisites and emit their resulting downloads.
@@ -94,6 +94,23 @@ workflow salmon_cDNA_index {
   emit:
     t2g = transcript_to_gene.out.t2g
     salmon_index = generate_salmon_index.out.salmon_index
+}
+
+workflow salmon_cDNA {
+  take:
+    genome
+    gtf
+    read1_files
+    read2_files
+  main:
+    salmon_cDNA_index(genome,gtf)
+    salmon_sel_mapping(salmon_cDNA_index.out.salmon_index,read1_files,read2_files,salmon_cDNA_index.out.t2g)
+    salmon_sel_quant(salmon_sel_mapping.out.salmon_map,salmsalmon_cDNA_index.out.t2g)
+    salmon_sketch_mapping(salmon_cDNA_index.out.salmon_index,read1_files,read2_files,salmon_cDNA_index.out.t2g)
+    salmon_sketch_quant(salmon_sketch_mapping.out.salmon_map,salmon_cDNA_index.out.t2g)
+  emit:
+    salmon_sel_quant_res = salmon_sel_quant.out.salmon_quant_res
+    salmon_sketch_qaunt_res = salmon_sketch_quant.out.salmon_quant_res
 }
 
 /*
