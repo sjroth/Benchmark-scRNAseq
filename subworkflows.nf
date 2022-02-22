@@ -106,7 +106,7 @@ workflow salmon_cDNA_sketch {
     transcript_to_gene(gtf)
     generate_salmon_index(transcriptome.out.transcripts)
     salmon_sketch_mapping(generate_salmon_index.out.salmon_index,read1_files,read2_files,transcript_to_gene.out.t2g)
-    generate_permit_list(salmon_sel_mapping.out.salmon_map)
+    generate_permit_list(salmon_sketch_mapping.out.salmon_map)
     collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_sketch_mapping.out.salmon_map,transcript_to_gene.out.t2g)
   emit:
     salmon_out = collate_rad_file_and_quant.out.salmon_quant_res
