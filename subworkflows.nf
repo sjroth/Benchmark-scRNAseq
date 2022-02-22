@@ -125,5 +125,5 @@ workflow salmon_cDNA {
     salmon_map_and_quant(salmon_cDNA_index.out.salmon_index,salmon_cDNA_index.out.t2g,read1_files,read2_files)
   emit:
     salmon_sel_quant_res = salmon_map_and_quant.out.salmon_sel_quant_res
-    salmon_sketch_quant_res _ salmon_map_and_quant.out.salmon_sketch_quant_res
+    salmon_sketch_quant_res = salmon_map_and_quant.out.salmon_sketch_quant_res
 }

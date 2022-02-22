@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl = 2
 
-include { download_prereq_data; star_full_index; star_sparse_index; run_kallisto; salmon_cDNA_index; salmon_cDNA_sel; salmon_cDNA_sketch; splici_transcriptome } from './subworkflows'
+include { download_prereq_data; star_full_index; star_sparse_index; run_kallisto; salmon_cDNA } from './subworkflows'
 include { cellranger_count } from './run-cellranger'
 
 workflow {
