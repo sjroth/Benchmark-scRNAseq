@@ -72,7 +72,8 @@ process transcript_to_gene {
     path 't2g.txt', emit: t2g
   shell:
     '''
-    awk '{if($3=="transcript") {OFS="\t"; print $14, $10} }' !{gtf} | sed 's/[;\"]//g' > t2g.tsv
+    awk '{if($3=="transcript") {OFS="\t"; print $14, $10} }' !{gtf} > test.txt
+    sed 's/[;\"]//g' test.txt > t2g.tsv
     '''
 }
 
