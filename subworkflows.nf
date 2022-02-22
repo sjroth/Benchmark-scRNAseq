@@ -118,3 +118,15 @@ workflow salmon_cDNA_sketch {
   emit:
     salmon_out = collate_rad_file_and_quant.out.salmon_quant_res
 }
+
+workflow splici_transcriptome {
+  take:
+    gtf
+    genome
+  main:
+    splici(gtf,genome)
+    remove_t2g_col(splici.out.t2g_3col)
+  emit:
+    transcripts = splici.out.transcripts
+    t2g = remove_t2g_col.out.t2g 
+}

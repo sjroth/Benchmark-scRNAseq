@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl = 2
 
-include { download_prereq_data; star_full_index; star_sparse_index; run_kallisto; salmon_cDNA_index; salmon_cDNA_sel; salmon_cDNA_sketch } from './subworkflows'
+include { download_prereq_data; star_full_index; star_sparse_index; run_kallisto; salmon_cDNA_index; salmon_cDNA_sel; salmon_cDNA_sketch; splici_transcriptome } from './subworkflows'
 include { cellranger_count } from './run-cellranger'
 
 workflow {
@@ -14,4 +14,5 @@ workflow {
   salmon_cDNA_index(download_prereq_data.out.cellranger_genome,download_prereq_data.out.cellranger_gtf)
   salmon_cDNA_sel(salmon_cDNA_index.out.salmon_index,download_prereq_data.out.read1_files_1k,download_prereq_data.out.read2_files_1k,salmon_cDNA_index.out.t2g)
   salmon_cDNA_sketch(salmon_cDNA_index.out.salmon_index,download_prereq_data.out.read1_files_1k,download_prereq_data.out.read2_files_1k,salmon_cDNA_index.out.t2g)
+  splici_transcriptome(download_prereq_data.out.cellranger_gtf,download_prereq_data.out.cellranger_genome)
 }
