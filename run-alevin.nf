@@ -154,3 +154,17 @@ process collate_rad_file_and_quant {
     alevin-fry quant -t ${task.cpus} -i $salmon_quant -o salmon-quant-res --tg-map $t2g --resolution cr-like --use-mtx
     """
 }
+
+/*
+ * Perform salmom quantification after salmon mapping.
+ */
+workflow salmon_quant {
+  take:
+    salmon_map
+    t2g
+  main:
+    generate_permit_list(salmon_map)
+    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_map,t2g)
+  emit:
+    salmon_quant_res = collate_rad_file_and_quant.out.salmon_quant_res
+}

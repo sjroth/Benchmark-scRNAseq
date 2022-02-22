@@ -11,8 +11,5 @@ workflow {
   //star_sparse_index(download_prereq_data.out.cellranger_genome, download_prereq_data.out.cellranger_gtf, download_prereq_data.out.read1_files_1k, download_prereq_data.out.read2_files_1k, download_prereq_data.out.barcode_list)
   //cellranger_count(download_prereq_data.out.cellranger_reference, download_prereq_data.out.fastq_dir_1k)
   //run_kallisto(download_prereq_data.out.cellranger_genome, download_prereq_data.out.cellranger_gtf, download_prereq_data.out.read1_files_1k, download_prereq_data.out.read2_files_1k)
-  salmon_cDNA_index(download_prereq_data.out.cellranger_genome,download_prereq_data.out.cellranger_gtf)
-  salmon_cDNA_sel(salmon_cDNA_index.out.salmon_index,download_prereq_data.out.read1_files_1k,download_prereq_data.out.read2_files_1k,salmon_cDNA_index.out.t2g)
-  salmon_cDNA_sketch(salmon_cDNA_index.out.salmon_index,download_prereq_data.out.read1_files_1k,download_prereq_data.out.read2_files_1k,salmon_cDNA_index.out.t2g)
-  splici_transcriptome(download_prereq_data.out.cellranger_gtf,download_prereq_data.out.cellranger_genome)
+  
 }

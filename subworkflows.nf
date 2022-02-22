@@ -78,6 +78,11 @@ workflow run_kallisto {
     kallisto_output = run_kb_count.out.kallisto_output
 }
 
+/*
+ * Generate transcript-to-gene mappings and salmon cDNA index. Take a genome and
+ * gtf in order to generate transcripts and transcript-to-gene mapping. Use
+ * transcripts to construct the salmon index.
+ */
 workflow salmon_cDNA_index {
   take:
     genome
@@ -90,6 +95,24 @@ workflow salmon_cDNA_index {
     t2g = transcript_to_gene.out.t2g
     salmon_index = generate_salmon_index.out.salmon_index
 }
+
+/*
+ * Generate splici transcriptome and transcript-to-gene mappings using roe.
+ * Also, remove 3rd column in splici transcript-to-gene mappings for downstream
+ * salmon processing.
+ */
+workflow splici_transcriptome {
+  take:
+    gtf
+    genome
+  main:
+    splici(gtf,genome)
+    remove_t2g_col(splici.out.t2g_3col)
+  emit:
+    transcripts = splici.out.transcripts
+    t2g = remove_t2g_col.out.t2g
+}
+
 
 workflow salmon_cDNA_sel {
   take:
@@ -117,16 +140,4 @@ workflow salmon_cDNA_sketch {
     collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_sketch_mapping.out.salmon_map,t2g)
   emit:
     salmon_out = collate_rad_file_and_quant.out.salmon_quant_res
-}
-
-workflow splici_transcriptome {
-  take:
-    gtf
-    genome
-  main:
-    splici(gtf,genome)
-    remove_t2g_col(splici.out.t2g_3col)
-  emit:
-    transcripts = splici.out.transcripts
-    t2g = remove_t2g_col.out.t2g
 }
