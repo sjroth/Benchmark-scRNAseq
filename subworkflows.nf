@@ -5,7 +5,7 @@ nextflow.enable.dsl = 2
 include { download_testdata_1k; download_testdata_5k; download_reference; download_barcodes } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
-include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; } from './run-alevin'
+include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; generate_sparse_salmon_index } from './run-alevin'
 include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './alevin-subworkflows'
 
 /*
@@ -79,23 +79,6 @@ workflow run_kallisto {
     kallisto_output = run_kb_count.out.kallisto_output
 }
 
-/*
- * Generate splici transcriptome and transcript-to-gene mappings using roe.
- * Also, remove 3rd column in splici transcript-to-gene mappings for downstream
- * salmon processing.
- */
-workflow splici_transcriptome {
-  take:
-    gtf
-    genome
-  main:
-    splici(gtf,genome)
-    remove_t2g_col(splici.out.t2g_3col)
-  emit:
-    transcripts = splici.out.transcripts
-    t2g = remove_t2g_col.out.t2g
-}
-
 workflow salmon_cDNA {
   take:
     genome
@@ -110,4 +93,24 @@ workflow salmon_cDNA {
   emit:
     salmon_sel_quant_res = salmon_map_and_quant.out.salmon_sel_quant_res
     salmon_sketch_quant_res = salmon_map_and_quant.out.salmon_sketch_quant_res
+}
+
+workflow salmon_splici {
+  take:
+    gtf
+    genome
+    read1_files
+    read2_files
+  main:
+    splici(gtf,genome)
+    remove_t2g_col(splici.out.t2g_3col)
+    generate_salmon_index(splici.out.transcripts)
+    generate_sparse_salmon_index(splici.out.transcripts)
+    salmon_quant_full_index(generate_salmon_index.out.salmon_index,remove_t2g_col.out.t2g,read1_files,read2_files)
+    salmon_quant_sparse_index(generate_sparse_salmon_index.out.salmon_index,remove_t2g_col.out.t2g,read1_files,read2_files)
+  emit:
+    salmon_sel_full_quant_res = salmon_quant_full_index.out.salmon_sel_quant_res
+    salmon_sketch_full_quant_res = salmon_quant_full_index.out.salmon_sketch_quant_res
+    salmon_sel_sparse_quant_res = salmon_quant_sparse_index.out.salmon_sel_quant_res
+    salmon_sketch_sparse_quant_res = salmon_quant_sparse_index.out.salmon_sketch_quant_res
 }
