@@ -69,7 +69,7 @@ process transcript_to_gene {
   input:
     file gtf
   output:
-    path 't2g.txt', emit: t2g
+    path 't2g.tsv', emit: t2g
   shell:
     template('t2g.txt')
 }
