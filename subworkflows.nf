@@ -5,7 +5,8 @@ nextflow.enable.dsl = 2
 include { download_testdata_1k; download_testdata_5k; download_reference; download_barcodes } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
-include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; salmon_sel_mapping; salmon_sketch_mapping; salmon_quant as salmon_sel_quant; salmon_quant as salmon_sketch_quant } from './run-alevin'
+include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; } from './run-alevin'
+include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './run-alevin'
 
 /*
  * Download prerequisites and emit their resulting downloads.
@@ -96,23 +97,6 @@ workflow salmon_cDNA_index {
     salmon_index = generate_salmon_index.out.salmon_index
 }
 
-workflow salmon_cDNA {
-  take:
-    genome
-    gtf
-    read1_files
-    read2_files
-  main:
-    salmon_cDNA_index(genome,gtf)
-    salmon_sel_mapping(salmon_cDNA_index.out.salmon_index,read1_files,read2_files,salmon_cDNA_index.out.t2g)
-    salmon_sel_quant(salmon_sel_mapping.out.salmon_map,salmsalmon_cDNA_index.out.t2g)
-    salmon_sketch_mapping(salmon_cDNA_index.out.salmon_index,read1_files,read2_files,salmon_cDNA_index.out.t2g)
-    salmon_sketch_quant(salmon_sketch_mapping.out.salmon_map,salmon_cDNA_index.out.t2g)
-  emit:
-    salmon_sel_quant_res = salmon_sel_quant.out.salmon_quant_res
-    salmon_sketch_qaunt_res = salmon_sketch_quant.out.salmon_quant_res
-}
-
 /*
  * Generate splici transcriptome and transcript-to-gene mappings using roe.
  * Also, remove 3rd column in splici transcript-to-gene mappings for downstream
@@ -130,31 +114,16 @@ workflow splici_transcriptome {
     t2g = remove_t2g_col.out.t2g
 }
 
-
-workflow salmon_cDNA_sel {
+workflow salmon_cDNA {
   take:
-    salmon_index
+    genome
+    gtf
     read1_files
     read2_files
-    t2g
   main:
-    salmon_sel_mapping(salmon_index,read1_files,read2_files,t2g)
-    generate_permit_list(salmon_sel_mapping.out.salmon_map)
-    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_sel_mapping.out.salmon_map,t2g)
+    salmon_cDNA_index(genome,gtf)
+    salmon_map_and_quant(salmon_cDNA_index.out.salmon_index,salmon_cDNA_index.out.t2g,read1_files,read2_files)
   emit:
-    salmon_out = collate_rad_file_and_quant.out.salmon_quant_res
-}
-
-workflow salmon_cDNA_sketch {
-  take:
-    salmon_index
-    read1_files
-    read2_files
-    t2g
-  main:
-    salmon_sketch_mapping(salmon_index,read1_files,read2_files,t2g)
-    generate_permit_list(salmon_sketch_mapping.out.salmon_map)
-    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_sketch_mapping.out.salmon_map,t2g)
-  emit:
-    salmon_out = collate_rad_file_and_quant.out.salmon_quant_res
+    salmon_sel_quant_res = salmon_map_and_quant.out.salmon_sel_quant_res
+    salmon_sketch_quant_res _ salmon_map_and_quant.out.salmon_sketch_quant_res
 }
