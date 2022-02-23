@@ -46,12 +46,14 @@ process sparse_star_index {
  * Create a process that performs STARsolo. Use settings to best mimic CellRanger.
  */
 process run_starsolo {
+  publishDir 's://fulcrumtx-users/sroth/Benchmark-scRNAseq/${out_name}/', mode: 'copy'
 
   input:
     path read1_files
     path read2_files
     file barcode_list
     path genome_idx
+    val out_name
 
   output:
     path 'Solo.out', emit: star_solo_dir

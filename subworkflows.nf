@@ -39,7 +39,7 @@ workflow star_full_index {
     barcode_list
   main:
     full_star_index(genome, gtf)
-    run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out.genome_idx)
+    run_starsolo(read1_files, read2_files, barcode_list, full_star_index.out.genome_idx, 'star_full_index')
   emit:
     star_solo_dir = run_starsolo.out.star_solo_dir
     star_log_files = run_starsolo.out.star_log_files
@@ -89,7 +89,7 @@ workflow salmon_cDNA {
     transcriptome(genome,gtf)
     transcript_to_gene(gtf)
     generate_salmon_index(transcriptome.out.transcripts)
-    salmon_map_and_quant(generate_salmon_index.out.salmon_index,transcript_to_gene.out.t2g,read1_files,read2_files)
+    salmon_map_and_quant(generate_salmon_index.out.salmon_index, transcript_to_gene.out.t2g, read1_files,read2_files)
   emit:
     salmon_sel_quant_res = salmon_map_and_quant.out.salmon_sel_quant_res
     salmon_sketch_quant_res = salmon_map_and_quant.out.salmon_sketch_quant_res
@@ -106,8 +106,8 @@ workflow salmon_splici {
     remove_t2g_col(splici.out.t2g_3col)
     generate_salmon_index(splici.out.transcripts)
     generate_sparse_salmon_index(splici.out.transcripts)
-    salmon_quant_full_index(generate_salmon_index.out.salmon_index,remove_t2g_col.out.t2g,read1_files,read2_files)
-    salmon_quant_sparse_index(generate_sparse_salmon_index.out.salmon_index,remove_t2g_col.out.t2g,read1_files,read2_files)
+    salmon_quant_full_index(generate_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files)
+    salmon_quant_sparse_index(generate_sparse_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files)
   emit:
     salmon_sel_full_quant_res = salmon_quant_full_index.out.salmon_sel_quant_res
     salmon_sketch_full_quant_res = salmon_quant_full_index.out.salmon_sketch_quant_res

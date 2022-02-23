@@ -164,7 +164,7 @@ workflow salmon_quant {
     t2g
   main:
     generate_permit_list(salmon_map)
-    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant,salmon_map,t2g)
+    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant, salmon_map,t2g)
   emit:
     salmon_quant_res = collate_rad_file_and_quant.out.salmon_quant_res
 }
