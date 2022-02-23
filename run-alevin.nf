@@ -142,16 +142,19 @@ process generate_permit_list {
 }
 
 process collate_rad_file_and_quant {
+  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
+
   input:
     path salmon_quant
     path salmon_map
-    path t2g
+    file t2g
+    val out_name
   output:
-    path 'salmon-quant-res', emit: salmon_quant_res
+    path "$out_name", emit: salmon_quant_res
   script:
     """
     alevin-fry collate -t ${task.cpus} -i $salmon_quant -r $salmon_map
-    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o salmon-quant-res --tg-map $t2g --resolution cr-like --use-mtx
+    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o $out_name --tg-map $t2g --resolution cr-like --use-mtx
     """
 }
 
@@ -162,9 +165,10 @@ workflow salmon_quant {
   take:
     salmon_map
     t2g
+    out_name
   main:
     generate_permit_list(salmon_map)
-    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant, salmon_map,t2g)
+    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant, salmon_map, t2g, out_name)
   emit:
     salmon_quant_res = collate_rad_file_and_quant.out.salmon_quant_res
 }

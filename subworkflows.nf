@@ -89,7 +89,7 @@ workflow salmon_cDNA {
     transcriptome(genome,gtf)
     transcript_to_gene(gtf)
     generate_salmon_index(transcriptome.out.transcripts)
-    salmon_map_and_quant(generate_salmon_index.out.salmon_index, transcript_to_gene.out.t2g, read1_files,read2_files)
+    salmon_map_and_quant(generate_salmon_index.out.salmon_index, transcript_to_gene.out.t2g, read1_files, read2_files, 'salmon-cDNA')
   emit:
     salmon_sel_quant_res = salmon_map_and_quant.out.salmon_sel_quant_res
     salmon_sketch_quant_res = salmon_map_and_quant.out.salmon_sketch_quant_res
@@ -106,8 +106,8 @@ workflow salmon_splici {
     remove_t2g_col(splici.out.t2g_3col)
     generate_salmon_index(splici.out.transcripts)
     generate_sparse_salmon_index(splici.out.transcripts)
-    salmon_quant_full_index(generate_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files)
-    salmon_quant_sparse_index(generate_sparse_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files)
+    salmon_quant_full_index(generate_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files, 'salmon-splici-full')
+    salmon_quant_sparse_index(generate_sparse_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files, 'salmon-splici-sparse')
   emit:
     salmon_sel_full_quant_res = salmon_quant_full_index.out.salmon_sel_quant_res
     salmon_sketch_full_quant_res = salmon_quant_full_index.out.salmon_sketch_quant_res
