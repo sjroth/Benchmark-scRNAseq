@@ -46,8 +46,7 @@ process sparse_star_index {
  * Create a process that performs STARsolo. Use settings to best mimic CellRanger.
  */
 process run_starsolo {
-  tag '${out_name}'
-  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/${out_name}/', mode: 'copy'
+  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
 
   input:
     path read1_files
@@ -57,13 +56,13 @@ process run_starsolo {
     val out_name
 
   output:
-    path 'Solo.out', emit: star_solo_dir
-    tuple path('Log.final.out'), path('Log.out'), path('Log.progress.out'), path('SJ.out.tab'), emit: star_log_files
+    path "${out_name}.Solo.out", emit: star_solo_dir
+    tuple path("${out_name}.Log.final.out"), path("${out_name}.Log.out"), path("${out_name}.Log.progress.out"), path("${out_name}.SJ.out.tab"), emit: star_log_files
 
   script:
     all_r1 = "${read1_files.join(',')}"
     all_r2 = "${read2_files.join(',')}"
     """
-    STAR --soloType CB_UMI_Simple --soloCBlen 16 --soloUMIlen 12 --soloCBwhitelist $barcode_list --genomeDir $genome_idx --readFilesIn $all_r2 $all_r1 --readFilesCommand zcat --outSAMtype None --runThreadN ${task.cpus} --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR --clipAdapterType CellRanger4 --outFilterScoreMin 30
+    STAR --soloType CB_UMI_Simple --soloCBlen 16 --soloUMIlen 12 --soloCBwhitelist $barcode_list --genomeDir $genome_idx --readFilesIn $all_r2 $all_r1 --readFilesCommand zcat --outSAMtype None --runThreadN ${task.cpus} --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR --clipAdapterType CellRanger4 --outFilterScoreMin 30 --outFileNamePrefix ${out_name}.
     """
 }
