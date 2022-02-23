@@ -23,20 +23,22 @@ process kallisto_reference {
  * Quantify using Kallisto.
  */
 process run_kb_count {
+  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/', mode: 'copy'
+
   input:
     path kallisto_index
     path transcripts_to_genes
     path read1_files
     path read2_files
   output:
-    path 'kallisto-test', emit: kallisto_output
+    path 'kallisto-out', emit: kallisto_output
   script:
     read1_lst = read1_files.toList()
     read2_lst = read2_files.toList()
     all_fastq = [read1_lst, read2_lst].transpose().flatten()
 
     """
-    kb count -i $kallisto_index -g $transcripts_to_genes -x 10XV3 -o kallisto-test -t ${task.cpus} ${all_fastq.join(' ')}
+    kb count -i $kallisto_index -g $transcripts_to_genes -x 10XV3 -o kallisto-out -t ${task.cpus} ${all_fastq.join(' ')}
     """
 
 }

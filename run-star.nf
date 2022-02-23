@@ -46,6 +46,7 @@ process sparse_star_index {
  * Create a process that performs STARsolo. Use settings to best mimic CellRanger.
  */
 process run_starsolo {
+  tag '${out_name}'
   publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/${out_name}/', mode: 'copy'
 
   input:

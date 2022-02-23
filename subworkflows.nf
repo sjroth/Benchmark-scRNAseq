@@ -57,7 +57,7 @@ workflow star_sparse_index {
     barcode_list
   main:
     sparse_star_index(genome, gtf)
-    run_starsolo(read1_files, read2_files, barcode_list, sparse_star_index.out.genome_idx)
+    run_starsolo(read1_files, read2_files, barcode_list, sparse_star_index.out.genome_idx, 'star_sparse_index')
   emit:
     star_solo_dir = run_starsolo.out.star_solo_dir
     star_log_files = run_starsolo.out.star_log_files
