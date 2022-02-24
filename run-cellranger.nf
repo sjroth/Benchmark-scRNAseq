@@ -6,7 +6,7 @@ nextflow.enable.dsl = 2
  * Run CellRanger using parameters to maximize speed.
  */
 process cellranger_count {
-  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/', mode: 'copy'
+  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/5k/', mode: 'copy'
 
   input:
     path transcriptome

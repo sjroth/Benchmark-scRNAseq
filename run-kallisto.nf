@@ -23,7 +23,7 @@ process kallisto_reference {
  * Quantify using Kallisto.
  */
 process run_kb_count {
-  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/', mode: 'copy'
+  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/5k/', mode: 'copy'
 
   input:
     path kallisto_index
