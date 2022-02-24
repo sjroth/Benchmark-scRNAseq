@@ -13,14 +13,14 @@ include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index;
  */
 workflow download_prereq_data {
   main:
-    download_testdata_1k()
+    download_testdata_5k()
     download_reference()
     download_barcodes()
   emit:
-    fastq_dir_1k = download_testdata_1k.out.fastq_dir
-    read1_files_1k = download_testdata_1k.out.read1_files
-    read2_files_1k = download_testdata_1k.out.read2_files
-    index_files_1k = download_testdata_1k.out.index_files
+    fastq_dir = download_testdata_5k.out.fastq_dir
+    read1_files = download_testdata_5k.out.read1_files
+    read2_files = download_testdata_5k.out.read2_files
+    index_files = download_testdata_5k.out.index_files
     cellranger_reference = download_reference.out.cellranger_reference
     cellranger_genome = download_reference.out.cellranger_genome
     cellranger_gtf = download_reference.out.cellranger_gtf
