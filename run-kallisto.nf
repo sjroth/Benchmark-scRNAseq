@@ -19,7 +19,6 @@ process kallisto_reference {
     """
 }
 
-/*
 process kallisto_reference_nuclear {
   input:
     file genome
@@ -31,7 +30,6 @@ process kallisto_reference_nuclear {
     kb ref -i transcriptome.idx -g transcripts_to_genes.txt -f1 cdna.fa -f2 intron.fa -c1 cdna_t2c.txt -c2 intron_t2c.txt --workflow nucleus $genome $gtf
     """
 }
-*/
 
 /*
  * Quantify using Kallisto.
