@@ -6,6 +6,7 @@ include { download_prereq_data; star_full_index; star_sparse_index; run_kallisto
 include { cellranger_count } from './run-cellranger'
 include { download_reference } from './download_prereqs'
 
+/*
 workflow benchmark_single_cell {
   download_prereq_data()
   star_full_index(download_prereq_data.out.cellranger_genome, download_prereq_data.out.cellranger_gtf, download_prereq_data.out.read1_files, download_prereq_data.out.read2_files, download_prereq_data.out.barcode_list)
@@ -15,6 +16,7 @@ workflow benchmark_single_cell {
   salmon_cDNA(download_prereq_data.out.cellranger_genome, download_prereq_data.out.cellranger_gtf, download_prereq_data.out.read1_files, download_prereq_data.out.read2_files)
   salmon_splici(download_prereq_data.out.cellranger_gtf, download_prereq_data.out.cellranger_genome, download_prereq_data.out.read1_files, download_prereq_data.out.read2_files)
 }
+*/
 
 workflow {
   download_reference()
