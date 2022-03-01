@@ -3,7 +3,7 @@
 nextflow.enable.dsl = 2
 
 /*
- * Construct a Kallisto reference.
+ * Construct a Kallisto reference for standard scRNA-seq.
  */
 process kallisto_reference {
   input:
@@ -16,6 +16,18 @@ process kallisto_reference {
   script:
     """
     kb ref -i transcriptome.idx -g transcripts_to_genes.txt -f1 cdna.fa $genome $gtf
+    """
+}
+
+process kallisto_reference_nuclear {
+  input:
+    file genome
+    file gtf
+  output:
+    path 'transcriptom.idx'
+  script:
+    """
+    kb ref -i transcriptome.idx -g transcripts_to_genes.txt -f1 cdna.fa -f2 intron.fa -c1 cdna_t2c.txt -c2 intron_t2c.txt --workflow nucleus $genome $gtf
     """
 }
 
