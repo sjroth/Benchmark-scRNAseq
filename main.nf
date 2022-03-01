@@ -5,6 +5,7 @@ nextflow.enable.dsl = 2
 include { download_prereq_data; star_full_index; star_sparse_index; run_kallisto; salmon_cDNA; salmon_splici } from './subworkflows'
 include { cellranger_count } from './run-cellranger'
 include { download_reference } from './download_prereqs'
+include { kallisto_reference_nuclear } from './run-kallisto'
 
 /*
 workflow benchmark_single_cell {
