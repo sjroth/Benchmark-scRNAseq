@@ -39,6 +39,54 @@ process download_testdata_5k {
 }
 
 /*
+ * Prefetch SRA. Choose biggest file from project.
+ */
+process prefetch {
+
+  output:
+    path "SRR13278454/SRR13278454.sra", emit: sra_file
+  script:
+    """
+    prefetch -p -X u -r yes -O . SRR13278454
+    """
+}
+
+/*
+ * Dump fastq from SRA.
+ */
+process fastq_dump {
+  input:
+    path sra_file
+  output:
+    tuple path("*_1.fastq"), path("*_2.fastq"), path("*_3.fastq"), emit: fastq_files
+  script:
+    """
+    fastq-dump --split-files $sra_file
+    """
+}
+
+/*
+ * Gzip and rename files.
+ */
+process pigz {
+  input:
+    tuple path(fastq_1), path(fastq_2), path(fastq_3)
+  output:
+    path 'fastq_dir', emit: fastq_dir
+    path 'fastq_dir/SRR13278454_S1_L001_R1_001.fastq.gz', emit: read1_file
+    path 'fastq_dir/SRR13278454_S1_L001_R2_001.fastq.gz', emit: read2_file
+    path 'fastq_dir/SRR13278454_S1_L001_I1_001.fastq.gz', emit: index_file
+  script:
+    """
+    pigz -p ${task.cpus} $fastq_1 $fastq_2 $fastq_3
+    mkdir fastq_dir
+    mv ${fastq_1}.gz fastq_dir/SRR13278454_S1_L001_I1_001.fastq.gz
+    mv ${fastq_2}.gz fastq_dir/SRR13278454_S1_L001_R1_001.fastq.gz
+    mv ${fastq_3}.gz fastq_dir/SRR13278454_S1_L001_R2_001.fastq.gz
+    """
+}
+
+/*
  * Create a process to download the latest genome reference from CellRanger.
  */
 process download_reference {

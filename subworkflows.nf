@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl = 2
 
-include { download_testdata_1k; download_testdata_5k; download_reference; download_barcodes } from './download_prereqs'
+include { download_testdata_1k; download_testdata_5k; prefetch; fastq_dump; pigz; download_reference; download_barcodes } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; generate_sparse_salmon_index } from './run-alevin'
@@ -13,14 +13,26 @@ include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index;
  */
 workflow download_prereq_data {
   main:
+    download_testdata_1k()
     download_testdata_5k()
+    prefetch()
+    fastq_dump(prefetch.out.sra_file)
+    pigz(fastq_dump.out.fastq_files)
     download_reference()
     download_barcodes()
   emit:
-    fastq_dir = download_testdata_5k.out.fastq_dir
+    fastq_dir_1k = download_testdata_1k.out.fastq_dir
+    read1_files_1k = download_testdata_1k.out.read1_files
+    read2_files_1k = download_testdata_1k.out.read2_files
+
+    fastq_dir_5k = download_testdata_5k.out.fastq_dir
     read1_files = download_testdata_5k.out.read1_files
     read2_files = download_testdata_5k.out.read2_files
-    index_files = download_testdata_5k.out.index_files
+
+    fastq_dir_nuc = pigz.out.fastq_dir
+    read1_file_nuc = pigz.out.read1_file
+    read2_file_nuc = pigz.out.read2_file
+
     cellranger_reference = download_reference.out.cellranger_reference
     cellranger_genome = download_reference.out.cellranger_genome
     cellranger_gtf = download_reference.out.cellranger_gtf
