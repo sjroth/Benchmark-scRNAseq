@@ -43,13 +43,14 @@ process kallisto_reference_nuclear {
  * Quantify using Kallisto.
  */
 process run_kb_count {
-  publishDir 's3://fulcrumtx-users/sroth/Benchmark-scRNAseq/5k/', mode: 'copy'
+  publishDir "$output_dir", mode: 'copy'
 
   input:
     path kallisto_index
     path transcripts_to_genes
     path read1_files
     path read2_files
+    path ouptut_dir
   output:
     path 'kallisto-out', emit: kallisto_output
   script:

@@ -3,10 +3,10 @@
 nextflow.enable.dsl = 2
 
 include { download_testdata_1k; download_testdata_5k; download_testdata_nuclei; prefetch; fastq_dump; pigz; download_reference; download_reference_mouse; download_barcodes; download_barcodes_10xv2 } from './download_prereqs'
-include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
-include { kallisto_reference_nuclear; run_kb_count } from './run-kallisto'
+include { full_star_index; sparse_star_index } from './run-star'
+include { kallisto_reference_nuclear } from './run-kallisto'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index as generate_salmon_cDNA_index; generate_salmon_index as generate_salmon_splici_index; generate_sparse_salmon_index } from './run-alevin'
-include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './alevin-subworkflows'
+include { cellranger_count } from './run-cellranger'
 
 /*
  * Download prerequisites and emit their resulting downloads.
@@ -93,6 +93,20 @@ workflow build_indices {
     salmon_splici_index = generate_salmon_splici_index.out.salmon_index
     salmon_sparse_index = generate_sparse_salmon_index.out.salmon_index
     salmon_splici_t2g = remove_t2g_col.out.t2g
+}
+
+/*
+ * Get expression for all workflows except kallisto cDNA because it is not used
+ * for both species. Can run expression for either cellular or nuclear data.
+ */
+workflow get_exp {
+  take:
+    cellranger_reference
+    fastq_path
+    count_mode
+    output_dir
+  main:
+    cellranger_count(cellranger_reference, fastq_path, count_mode, output_dir)
 }
 
 /*
