@@ -4,7 +4,7 @@ nextflow.enable.dsl = 2
 
 include { download_testdata_1k; download_testdata_5k; download_testdata_nuclei; prefetch; fastq_dump; pigz; download_reference; download_reference_mouse; download_barcodes; download_barcodes_10xv2 } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
-include { kallisto_reference; run_kb_count } from './run-kallisto'
+include { kallisto_reference; kallisto_reference_nuclear; run_kb_count } from './run-kallisto'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index as generate_salmon_cDNA_index; generate_salmon_index as generate_salmon_splici_index; generate_sparse_salmon_index } from './run-alevin'
 include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './alevin-subworkflows'
 
@@ -49,7 +49,7 @@ workflow download_prereq_data {
 }
 
 /*
- * Build genome indices for downstream processing.
+ * Build genome indices for downstream processing. Don't include kallisto cDNA reference as it is not used by both species.
  */
 workflow build_indices {
   take:
@@ -59,7 +59,7 @@ workflow build_indices {
     full_star_index(genome, gtf)
     sparse_star_index(genome, gtf)
 
-    kallisto_reference(genome, gtf)
+    kallisto_reference_nuclear(genome, gtf)
 
     transcriptome(genome, gtf)
     transcript_to_gene(gtf)
@@ -73,9 +73,12 @@ workflow build_indices {
     star_idx_full = full_star_index.out.genome_idx
     star_idx_sparse = sparse_star_index.out.genome_idx
 
-    kallisto_index = kallisto_reference.out.kallisto_index
-    kallisto_t2g = kallisto_reference.out.transcripts_to_genes
-    kallisto_cdna = kallisto_reference.out.cdna
+    kallisto_index_nuc = kallisto_reference_nuclear.out.kallisto_index
+    kallisto_t2g_nuc = kallisto_reference_nuclear.out.transcripts_to_genes
+    kallisto_cdna_nuc = kallisto_reference_nuclear.out.cdna
+    kallisto_cdna_t2c_nuc = kallisto_reference_nuclear.out.cdna_t2c
+    kallisto_intron_nuc = kallisto_reference_nuclear.out.intron
+    kallisto_intron_t2c_nuc = kallisto_reference_nuclear.out.intron_t2c
 
     salmon_cdna_index = generate_salmon_cDNA_index.out.salmon_index
     salmon_cdna_t2g = transcript_to_gene.out.t2g

@@ -44,10 +44,10 @@ process download_testdata_5k {
 process download_testdata_nuclei {
 
   output:
-    path 'nuclei_900_fastqs', emit: fastq_dir
-    tuple file('nuclei_900_fastqs/nuclei_900_S1_L001_R1_001.fastq.gz'), file('nuclei_900_fastqs/nuclei_900_S1_L002_R1_001.fastq.gz'), emit: read1_files
-    tuple file('nuclei_900_fastqs/nuclei_900_S1_L001_R2_001.fastq.gz'), file('nuclei_900_fastqs/nuclei_900_S1_L002_R2_001.fastq.gz'), emit: read2_files
-    tuple file('nuclei_900_fastqs/nuclei_900_S1_L001_I1_001.fastq.gz'), file('nuclei_900_fastqs/nuclei_900_S1_L002_I1_001.fastq.gz'), emit: index_files
+    path "nuclei_900_fastqs", emit: fastq_dir
+    tuple file("nuclei_900_fastqs/nuclei_900_S1_L001_R1_001.fastq.gz"), file("nuclei_900_fastqs/nuclei_900_S1_L002_R1_001.fastq.gz"), emit: read1_files
+    tuple file("nuclei_900_fastqs/nuclei_900_S1_L001_R2_001.fastq.gz"), file("nuclei_900_fastqs/nuclei_900_S1_L002_R2_001.fastq.gz"), emit: read2_files
+    tuple file("nuclei_900_fastqs/nuclei_900_S1_L001_I1_001.fastq.gz"), file("nuclei_900_fastqs/nuclei_900_S1_L002_I1_001.fastq.gz"), emit: index_files
   script:
     """
     wget https://cf.10xgenomics.com/samples/cell-exp/2.1.0/nuclei_900/nuclei_900_fastqs.tar
@@ -156,7 +156,7 @@ process download_barcodes {
 process download_barcodes_10xv2 {
 
   output:
-    path '737K-august-2016.txt', emit: barcode_list
+    path "737K-august-2016.txt", emit: barcode_list
   script:
     """
     wget https://github.com/10XGenomics/cellranger/raw/master/lib/python/cellranger/barcodes/737K-august-2016.txt
