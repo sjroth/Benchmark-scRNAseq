@@ -24,7 +24,7 @@ process cellranger_count {
       cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus}
       """
 
-    else if( mode == 'nuclear' )
+    else if( count_mode == 'nuclear' )
       """
       cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} --include-introns
       """
