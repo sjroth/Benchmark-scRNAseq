@@ -28,8 +28,8 @@ process cellranger_count {
     else
       error "Invalid Count Mode"
 
-      """
-      cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
-      """
+    """
+    cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
+    """
 
 }
