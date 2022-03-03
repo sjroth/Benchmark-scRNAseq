@@ -19,6 +19,9 @@ process kallisto_reference {
     """
 }
 
+/*
+ * Construct a Kallisto reference for single nuclei RNA-seq.
+ */
 process kallisto_reference_nuclear {
   input:
     file genome

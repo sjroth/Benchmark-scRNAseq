@@ -4,7 +4,7 @@ nextflow.enable.dsl = 2
 
 include { download_testdata_1k; download_testdata_5k; download_testdata_nuclei; prefetch; fastq_dump; pigz; download_reference; download_reference_mouse; download_barcodes; download_barcodes_10xv2 } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
-include { kallisto_reference; kallisto_reference_nuclear; run_kb_count } from './run-kallisto'
+include { kallisto_reference_nuclear; run_kb_count } from './run-kallisto'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index as generate_salmon_cDNA_index; generate_salmon_index as generate_salmon_splici_index; generate_sparse_salmon_index } from './run-alevin'
 include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './alevin-subworkflows'
 
