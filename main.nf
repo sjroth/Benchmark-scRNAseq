@@ -27,5 +27,5 @@ workflow {
   kallisto_reference(download_prereq_data.out.cellranger_genome, download_prereq_data.out.cellranger_gtf)
 
   // Run mouse data.
-  build_indices_mm10(download_prereq_data.out.cellranger_genome_mouse, download_prereq_data.out.cellranger_gtf)
+  build_indices_mm10(download_prereq_data.out.cellranger_genome_mouse, download_prereq_data.out.cellranger_gtf_mouse)
 }
