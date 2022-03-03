@@ -20,16 +20,18 @@ process cellranger_count {
   script:
 
     if( count_mode == 'cell' )
-      count_cmd = ''
+      """
+      cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus}
+      """
 
     else if( mode == 'nuclear' )
-      count_cmd = '--include-introns'
+      """
+      cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} --include-introns
+      """
 
     else
       error "Invalid Count Mode"
 
-    """
-    cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
-    """
+
 
 }
