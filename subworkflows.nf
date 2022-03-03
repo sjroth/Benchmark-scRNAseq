@@ -22,7 +22,10 @@ workflow download_prereq_data {
     pigz(fastq_dump.out.fastq_files)
 
     download_reference()
+    download_reference_mouse()
+
     download_barcodes()
+    download_barcodes_10xv2()
   emit:
     fastq_dir_1k = download_testdata_1k.out.fastq_dir
     read1_files_1k = download_testdata_1k.out.read1_files
@@ -43,6 +46,10 @@ workflow download_prereq_data {
     cellranger_reference = download_reference.out.cellranger_reference
     cellranger_genome = download_reference.out.cellranger_genome
     cellranger_gtf = download_reference.out.cellranger_gtf
+
+    cellranger_reference_mouse = download_reference_mouse.out.cellranger_reference
+    cellranger_genome_mouse = download_reference_mouse.out.cellranger_genome
+    cellranger_gtf_mouse = download_reference_mouse.out.cellranger_gtf
 
     barcodes_v3 = download_barcodes.out.barcode_list
     barcodes_v2 = download_barcodes_10xv2.out.barcode_list
