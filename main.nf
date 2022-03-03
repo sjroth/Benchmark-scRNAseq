@@ -36,7 +36,7 @@ workflow {
 
   // 5k PBMC data.
   get_exp_human_5k(download_prereq_data.out.cellranger_reference, download_prereq_data.out.fastq_dir_5k, 'cell', "${params.outbase}/5k")
-  run_kb_count_1k(kallisto_reference.out.kallisto_index, kallisto_reference.out.transcripts_to_genes, download_prereq_data.out.read1_files_5k, download_prereq_data.out.read2_files_5k, "${params.outbase}/5k")
+  run_kb_count_5k(kallisto_reference.out.kallisto_index, kallisto_reference.out.transcripts_to_genes, download_prereq_data.out.read1_files_5k, download_prereq_data.out.read2_files_5k, "${params.outbase}/5k")
 
   // Get expression for nuclear data.
   get_exp_human_nuclear(download_prereq_data.out.cellranger_reference, download_prereq_data.out.fastq_dir_nuc, 'nuclear', "${params.outbase}/geo")
