@@ -39,6 +39,23 @@ process download_testdata_5k {
 }
 
 /*
+ * Download 10X mouse E18 brain nuclei data.
+ */
+process download_testdata_nuclei {
+
+  output:
+    path 'nuclei_900_fastqs', emit: fastq_dir
+    tuple file('nuclei_900_fastqs/nuclei_900_S1_L001_R1_001.fastq.gz'), file('nuclei_900_fastqs/nuclei_900_S1_L002_R1_001.fastq.gz'), emit: read1_files
+    tuple file('nuclei_900_fastqs/nuclei_900_S1_L001_R2_001.fastq.gz'), file('nuclei_900_fastqs/nuclei_900_S1_L002_R2_001.fastq.gz'), emit: read2_files
+    tuple file('nuclei_900_fastqs/nuclei_900_S1_L001_I1_001.fastq.gz'), file('nuclei_900_fastqs/nuclei_900_S1_L002_I1_001.fastq.gz'), emit: index_files
+  script:
+    """
+    wget https://cf.10xgenomics.com/samples/cell-exp/2.1.0/nuclei_900/nuclei_900_fastqs.tar
+    tar -xvf nuclei_900_fastqs.tar
+    """
+}
+
+/*
  * Prefetch SRA. Choose biggest file from project.
  */
 process prefetch {
@@ -87,7 +104,7 @@ process pigz {
 }
 
 /*
- * Create a process to download the latest genome reference from CellRanger.
+ * Create a process to download the latest human genome reference from CellRanger.
  */
 process download_reference {
 
@@ -104,6 +121,22 @@ process download_reference {
 }
 
 /*
+ * Download latest mouse genome reference from CellRanger.
+ */
+process download_reference_mouse {
+
+  output:
+    path 'refdata-gex-mm10-2020-A/', emit: cellranger_reference
+    path 'refdata-gex-mm10-2020-A/fasta/genome.fa', emit: cellranger_genome
+    path 'refdata-gex-mm10-2020-A/genes/genes.gtf', emit: cellranger_gtf
+  script:
+    """
+    wget https://cf.10xgenomics.com/supp/cell-exp/refdata-gex-mm10-2020-A.tar.gz
+    tar -zxvf refdata-gex-mm10-2020-A.tar.gz
+    """
+}
+
+/*
  * Create a process that will download the 10X V3 barcodes.
  */
 process download_barcodes {
@@ -114,5 +147,18 @@ process download_barcodes {
     """
     wget https://github.com/10XGenomics/cellranger/raw/master/lib/python/cellranger/barcodes/3M-february-2018.txt.gz
     gunzip 3M-february-2018.txt.gz
+    """
+}
+
+/*
+ * Download 10X V2 barcodes.
+ */
+process download_barcodes_10xv2 {
+
+  output:
+    path '737K-august-2016.txt', emit: barcode_list
+  script:
+    """
+    wget https://github.com/10XGenomics/cellranger/raw/master/lib/python/cellranger/barcodes/737K-august-2016.txt
     """
 }

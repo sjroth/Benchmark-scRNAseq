@@ -24,7 +24,12 @@ process kallisto_reference_nuclear {
     file genome
     file gtf
   output:
-    tuple path('transcriptome.idx.0'), path('transcriptome.idx.1'), path('transcriptome.idx.2'), path('transcriptome.idx.3'), emit: kallisto_index
+    tuple path('transcriptome.idx_cdna'), path('transcriptome.idx_intron.0'), path('transcriptome.idx_intron.1'), path('transcriptome.idx_intron.2'), path('transcriptome.idx_intron.3'), path('transcriptome.idx_intron.4'), path('transcriptome.idx_intron.5'), path('transcriptome.idx_intron.6'), emit: kallisto_index
+    path 'transcripts_to_genes.txt', emit: transcripts_to_genes
+    path 'cdna.fa', emit: cdna
+    path 'cdna_t2c.txt', emit: cdna_t2c
+    path 'intron.fa', emit: intron
+    path 'intron_t2c.txt', emit: intron_t2c
   script:
     """
     kb ref -i transcriptome.idx -g transcripts_to_genes.txt -f1 cdna.fa -f2 intron.fa -c1 cdna_t2c.txt -c2 intron_t2c.txt --workflow nucleus -n 4 $genome $gtf

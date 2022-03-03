@@ -2,10 +2,10 @@
 
 nextflow.enable.dsl = 2
 
-include { download_testdata_1k; download_testdata_5k; prefetch; fastq_dump; pigz; download_reference; download_barcodes } from './download_prereqs'
+include { download_testdata_1k; download_testdata_5k; download_testdata_nuclei; prefetch; fastq_dump; pigz; download_reference; download_reference_mouse; download_barcodes; download_barcodes_10xv2 } from './download_prereqs'
 include { full_star_index; sparse_star_index; run_starsolo } from './run-star'
 include { kallisto_reference; run_kb_count } from './run-kallisto'
-include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index; generate_sparse_salmon_index } from './run-alevin'
+include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index as generate_salmon_cDNA_index; generate_salmon_index as generate_salmon_splici_index; generate_sparse_salmon_index } from './run-alevin'
 include { salmon_map_and_quant; salmon_map_and_quant as salmon_quant_full_index; salmon_map_and_quant as salmon_quant_sparse_index; } from './alevin-subworkflows'
 
 /*
@@ -15,9 +15,12 @@ workflow download_prereq_data {
   main:
     download_testdata_1k()
     download_testdata_5k()
+    download_testdata_nuclei()
+
     prefetch()
     fastq_dump(prefetch.out.sra_file)
     pigz(fastq_dump.out.fastq_files)
+
     download_reference()
     download_barcodes()
   emit:
@@ -29,6 +32,10 @@ workflow download_prereq_data {
     read1_files = download_testdata_5k.out.read1_files
     read2_files = download_testdata_5k.out.read2_files
 
+    fastq_dir_mouse_nuc = download_testdata_nuclei.out.fastq_dir
+    read1_files_mouse_nuc = download_testdata_nuclei.out.read1_files
+    read2_files_mouse_nuc = download_testdata_nuclei.out.read2_files
+
     fastq_dir_nuc = pigz.out.fastq_dir
     read1_file_nuc = pigz.out.read1_file
     read2_file_nuc = pigz.out.read2_file
@@ -36,7 +43,46 @@ workflow download_prereq_data {
     cellranger_reference = download_reference.out.cellranger_reference
     cellranger_genome = download_reference.out.cellranger_genome
     cellranger_gtf = download_reference.out.cellranger_gtf
-    barcode_list = download_barcodes.out.barcode_list
+
+    barcodes_v3 = download_barcodes.out.barcode_list
+    barcodes_v2 = download_barcodes_10xv2.out.barcode_list
+}
+
+/*
+ * Build genome indices for downstream processing.
+ */
+workflow build_indices {
+  take:
+    genome
+    gtf
+  main:
+    full_star_index(genome, gtf)
+    sparse_star_index(genome, gtf)
+
+    kallisto_reference(genome, gtf)
+
+    transcriptome(genome, gtf)
+    transcript_to_gene(gtf)
+    generate_salmon_cDNA_index(transcriptome.out.transcripts)
+
+    splici(gtf,genome)
+    remove_t2g_col(splici.out.t2g_3col)
+    generate_salmon_splici_index(splici.out.transcripts)
+    generate_sparse_salmon_index(splici.out.transcripts)
+  emit:
+    star_idx_full = full_star_index.out.genome_idx
+    star_idx_sparse = sparse_star_index.out.genome_idx
+
+    kallisto_index = kallisto_reference.out.kallisto_index
+    kallisto_t2g = kallisto_reference.out.transcripts_to_genes
+    kallisto_cdna = kallisto_reference.out.cdna
+
+    salmon_cdna_index = generate_salmon_cDNA_index.out.salmon_index
+    salmon_cdna_t2g = transcript_to_gene.out.t2g
+
+    salmon_splici_index = generate_salmon_splici_index.out.salmon_index
+    salmon_sparse_index = generate_sparse_salmon_index.out.salmon_index
+    salmon_splici_t2g = remove_t2g_col.out.t2g
 }
 
 /*
