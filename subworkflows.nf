@@ -32,8 +32,8 @@ workflow download_prereq_data {
     read2_files_1k = download_testdata_1k.out.read2_files
 
     fastq_dir_5k = download_testdata_5k.out.fastq_dir
-    read1_files = download_testdata_5k.out.read1_files
-    read2_files = download_testdata_5k.out.read2_files
+    read1_files_5k = download_testdata_5k.out.read1_files
+    read2_files_5k = download_testdata_5k.out.read2_files
 
     fastq_dir_mouse_nuc = download_testdata_nuclei.out.fastq_dir
     read1_files_mouse_nuc = download_testdata_nuclei.out.read1_files
