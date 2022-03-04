@@ -65,8 +65,6 @@ workflow build_indices {
     full_star_index(genome, gtf)
     sparse_star_index(genome, gtf)
 
-    kallisto_reference_nuclear(genome, gtf)
-
     transcriptome(genome, gtf)
     transcript_to_gene(gtf)
     generate_salmon_cDNA_index(transcriptome.out.transcripts)
