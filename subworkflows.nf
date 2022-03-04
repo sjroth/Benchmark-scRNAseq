@@ -4,7 +4,6 @@ nextflow.enable.dsl = 2
 
 include { download_testdata_1k; download_testdata_5k; download_testdata_nuclei; prefetch; fastq_dump; pigz; download_reference; download_reference_mouse; download_barcodes; download_barcodes_10xv2 } from './download_prereqs'
 include { full_star_index; sparse_star_index } from './run-star'
-include { kallisto_reference_nuclear } from './run-kallisto'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index as generate_salmon_cDNA_index; generate_salmon_index as generate_salmon_splici_index; generate_sparse_salmon_index } from './run-alevin'
 include { cellranger_count } from './run-cellranger'
 
@@ -79,13 +78,6 @@ workflow build_indices {
   emit:
     star_idx_full = full_star_index.out.genome_idx
     star_idx_sparse = sparse_star_index.out.genome_idx
-
-    kallisto_index_nuc = kallisto_reference_nuclear.out.kallisto_index
-    kallisto_t2g_nuc = kallisto_reference_nuclear.out.transcripts_to_genes
-    kallisto_cdna_nuc = kallisto_reference_nuclear.out.cdna
-    kallisto_cdna_t2c_nuc = kallisto_reference_nuclear.out.cdna_t2c
-    kallisto_intron_nuc = kallisto_reference_nuclear.out.intron
-    kallisto_intron_t2c_nuc = kallisto_reference_nuclear.out.intron_t2c
 
     salmon_cdna_index = generate_salmon_cDNA_index.out.salmon_index
     salmon_cdna_t2g = transcript_to_gene.out.t2g
