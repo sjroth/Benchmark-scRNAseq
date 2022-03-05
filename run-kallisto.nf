@@ -23,7 +23,7 @@ process kallisto_reference {
  * Quantify using Kallisto.
  */
 process run_kb_count {
-  publishDir "$output_dir", mode: 'copy'
+  publishDir "${output_dir}", mode: 'copy'
 
   input:
     path kallisto_index
@@ -39,6 +39,7 @@ process run_kb_count {
     all_fastq = [read1_lst, read2_lst].transpose().flatten()
 
     """
+    echo $output_dir
     kb count -i $kallisto_index -g $transcripts_to_genes -x 10XV3 -o kallisto-out -t ${task.cpus} ${all_fastq.join(' ')}
     """
 

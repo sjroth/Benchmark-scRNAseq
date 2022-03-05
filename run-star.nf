@@ -46,7 +46,7 @@ process sparse_star_index {
  * Create a process that performs STARsolo. Use settings to best mimic CellRanger.
  */
 process run_starsolo {
-  publishDir "$output_dir", mode: "copy"
+  publishDir "${output_dir}", mode: "copy"
 
   input:
     path read1_files
@@ -81,6 +81,7 @@ process run_starsolo {
       error "Invalid 10X Chemistry"
 
     """
+    echo $output_dir
     STAR --soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen $umi_len --soloBarcodeReadLength 0 --soloCBwhitelist $barcode_list --genomeDir $genome_idx --readFilesIn $all_r2 $all_r1 $count_cmd --readFilesCommand zcat --outSAMtype None --runThreadN ${task.cpus} --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR --clipAdapterType CellRanger4 --outFilterScoreMin 30 --outFileNamePrefix ${out_name}.
     """
 }

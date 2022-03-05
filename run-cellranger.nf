@@ -6,7 +6,7 @@ nextflow.enable.dsl = 2
  * Run CellRanger using parameters to maximize speed.
  */
 process cellranger_count {
-  publishDir "$output_dir", mode: 'copy'
+  publishDir "${output_dir}", mode: 'copy'
 
   input:
     path transcriptome
