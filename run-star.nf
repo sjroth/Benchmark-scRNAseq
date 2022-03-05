@@ -46,13 +46,16 @@ process sparse_star_index {
  * Create a process that performs STARsolo. Use settings to best mimic CellRanger.
  */
 process run_starsolo {
-  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/5k/", mode: "copy"
+  publishDir "$output_dir", mode: "copy"
 
   input:
     path read1_files
     path read2_files
     file barcode_list
     path genome_idx
+    val count_mode
+    val chemistry
+    path output_dir
     val out_name
 
   output:
@@ -62,7 +65,22 @@ process run_starsolo {
   script:
     all_r1 = "${read1_files.join(',')}"
     all_r2 = "${read2_files.join(',')}"
+
+    if( count_mode == 'cell' )
+      count_cmd = ''
+    else if( count_mode == 'nuclear' )
+      count_cmd = '--soloFeatures GeneFull'
+    else
+      error "Invalid Count Mode"
+
+    if( chemistry == 'v3' )
+      umi_len = '12'
+    else if( chemistry == 'v2' )
+      umi_len = '10'
+    else
+      error "Invalid 10X Chemistry"
+
     """
-    STAR --soloType CB_UMI_Simple --soloCBlen 16 --soloUMIlen 12 --soloCBwhitelist $barcode_list --genomeDir $genome_idx --readFilesIn $all_r2 $all_r1 --readFilesCommand zcat --outSAMtype None --runThreadN ${task.cpus} --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR --clipAdapterType CellRanger4 --outFilterScoreMin 30 --outFileNamePrefix ${out_name}.
+    STAR --soloType CB_UMI_Simple --soloCBstart 1 --soloCBlen 16 --soloUMIstart 17 --soloUMIlen $umi_len --soloBarcodeReadLength 0 --soloCBwhitelist $barcode_list --genomeDir $genome_idx --readFilesIn $all_r2 $all_r1 $count_cmd --readFilesCommand zcat --outSAMtype None --runThreadN ${task.cpus} --soloCBmatchWLtype 1MM_multi_Nbase_pseudocounts --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --soloCellFilter EmptyDrops_CR --clipAdapterType CellRanger4 --outFilterScoreMin 30 --outFileNamePrefix ${out_name}.
     """
 }

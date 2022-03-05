@@ -90,9 +90,9 @@ process pigz {
     tuple path(fastq_1), path(fastq_2), path(fastq_3)
   output:
     path 'fastq_dir', emit: fastq_dir
-    path 'fastq_dir/SRR13278454_S1_L001_R1_001.fastq.gz', emit: read1_file
-    path 'fastq_dir/SRR13278454_S1_L001_R2_001.fastq.gz', emit: read2_file
-    path 'fastq_dir/SRR13278454_S1_L001_I1_001.fastq.gz', emit: index_file
+    tuple path('fastq_dir/SRR13278454_S1_L001_R1_001.fastq.gz'), emit: read1_file
+    tuple path('fastq_dir/SRR13278454_S1_L001_R2_001.fastq.gz'), emit: read2_file
+    tuple path('fastq_dir/SRR13278454_S1_L001_I1_001.fastq.gz'), emit: index_file
   script:
     """
     pigz -p ${task.cpus} $fastq_1 $fastq_2 $fastq_3
