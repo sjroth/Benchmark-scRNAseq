@@ -110,9 +110,15 @@ workflow get_exp {
     output_dir
 
   main:
+
     cellranger_count(cellranger_reference, fastq_path, count_mode, output_dir)
     run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry, output_dir, 'STARsolo-Full')
     run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry, output_dir, 'STARsolo-Sparse')
+
+  emit:
+    cellranger_out = cellranger_count.out.cellranger_output
+    starsolo_full_out = run_starsolo_full.out.star_solo_dir
+    starsolo_sparse_out = run_starsolo_sparse.out.star_solo_dir
 }
 
 workflow salmon_cDNA {
