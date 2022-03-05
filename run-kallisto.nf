@@ -30,7 +30,7 @@ process run_kb_count {
     path transcripts_to_genes
     path read1_files
     path read2_files
-    path ouptut_dir
+    path output_dir
   output:
     path 'kallisto-out', emit: kallisto_output
   script:
@@ -39,7 +39,6 @@ process run_kb_count {
     all_fastq = [read1_lst, read2_lst].transpose().flatten()
 
     """
-    echo $output_dir
     kb count -i $kallisto_index -g $transcripts_to_genes -x 10XV3 -o kallisto-out -t ${task.cpus} ${all_fastq.join(' ')}
     """
 
