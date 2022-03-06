@@ -27,7 +27,7 @@ workflow {
   run_kb_count_5k(kallisto_reference.out.kallisto_index, kallisto_reference.out.transcripts_to_genes, download_prereq_data.out.read1_files_5k, download_prereq_data.out.read2_files_5k, "5k")
 
   // Get expression for nuclear data.
-  get_exp_human_nuclear(download_prereq_data.out.cellranger_reference, build_indices_hg38.out.star_idx_full, build_indices_hg38.out.star_idx_sparse, download_prereq_data.out.fastq_dir_nuc, download_prereq_data.out.read1_file_nuc, download_prereq_data.out.read2_file_nuc, 'nuclear', download_prereq_data.out.barcodes_v3, 'v3', "${outbase}/geo")
+  get_exp_human_nuclear(download_prereq_data.out.cellranger_reference, build_indices_hg38.out.star_idx_full, build_indices_hg38.out.star_idx_sparse, download_prereq_data.out.fastq_dir_nuc, download_prereq_data.out.read1_file_nuc, download_prereq_data.out.read2_file_nuc, 'nuclear', download_prereq_data.out.barcodes_v3, 'v3', "geo")
 
   // Run mouse data.
   // Build indices.

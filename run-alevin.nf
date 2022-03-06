@@ -142,7 +142,7 @@ process generate_permit_list {
 }
 
 process collate_rad_file_and_quant {
-  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/5k/", mode: "copy"
+  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
 
   input:
     path salmon_quant
