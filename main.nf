@@ -34,5 +34,5 @@ workflow {
   build_indices_mm10(download_prereq_data.out.cellranger_genome_mouse, download_prereq_data.out.cellranger_gtf_mouse)
 
   // Get expression for mouse nuclei data.
-  get_exp_mouse(download_prereq_data.out.cellranger_reference_mouse, build_indices_mm10.out.star_idx_full, build_indices_mm10.out.star_idx_sparse, download_prereq_data.out.fastq_dir_mouse_nuc, download_prereq_data.out.read1_files_mouse_nuc, download_prereq_data.out.read2_files_mouse_nuc, 'nuclear', download_prereq_data.out.barcodes_v2, 'v2', "${outbase}/mouse")
+  get_exp_mouse(download_prereq_data.out.cellranger_reference_mouse, build_indices_mm10.out.star_idx_full, build_indices_mm10.out.star_idx_sparse, download_prereq_data.out.fastq_dir_mouse_nuc, download_prereq_data.out.read1_files_mouse_nuc, download_prereq_data.out.read2_files_mouse_nuc, 'nuclear', download_prereq_data.out.barcodes_v2, 'v2', "mouse")
 }
