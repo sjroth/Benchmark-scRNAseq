@@ -107,13 +107,13 @@ workflow get_exp {
     chemistry
 
     // Output
-    output_dir
+    output
 
   main:
 
-    cellranger_count(cellranger_reference, fastq_path, count_mode, output_dir)
-    run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry, output_dir, 'STARsolo-Full')
-    run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry, output_dir, 'STARsolo-Sparse')
+    cellranger_count(cellranger_reference, fastq_path, count_mode, output)
+    run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry, "STARsolo-Full-${output}")
+    run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry, "STARsolo-Sparse-${output}")
 
   emit:
     cellranger_out = cellranger_count.out.cellranger_output

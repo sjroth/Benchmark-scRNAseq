@@ -6,16 +6,16 @@ nextflow.enable.dsl = 2
  * Run CellRanger using parameters to maximize speed.
  */
 process cellranger_count {
-  publishDir "${output_dir}", mode: 'copy'
+  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: 'copy'
 
   input:
     path transcriptome
     path fastq_path
     val count_mode
-    path output_dir
+    val output
 
   output:
-    path 'cellranger-out/outs', emit: cellranger_output
+    path "cellranger-${output}/outs", emit: cellranger_output
 
   script:
 
@@ -29,7 +29,7 @@ process cellranger_count {
       error "Invalid Count Mode"
 
     """
-    cellranger count --id cellranger-out --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
+    cellranger count --id cellranger-${output} --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
     """
 
 }
