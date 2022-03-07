@@ -57,6 +57,7 @@ process run_starsolo {
     val chemistry
 
   output:
+    path "Solo.out", emit: star_solo_outdir
     path "Solo.out/Gene/filtered/matrix.mtx", emit: star_solo_mtx
     path "Solo.out/Gene/filtered/features.tsv", emit: star_solo_features
     path "Solo.out/Gene/filtered/barcodes.tsv", emit: star_solo_barcodes
