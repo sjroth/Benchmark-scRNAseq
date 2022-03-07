@@ -115,10 +115,10 @@ workflow get_exp {
     cellranger_count(cellranger_reference, fastq_path, count_mode, output)
 
     run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry)
-    format_star_output_full(run_starsolo_full.out.star_solo_out_mtx, run_starsolo_full.out.star_solo_out_features, run_starsolo_full.out.star_solo_out_barcodes, "_full_${output}")
+    format_star_output_full(run_starsolo_full.out.star_solo_mtx, run_starsolo_full.out.star_solo_features, run_starsolo_full.out.star_solo_barcodes, "_full_${output}")
 
     run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry)
-    format_star_output_sparse(run_starsolo_sparse.out.star_solo_out_mtx, run_starsolo_sparse.out.star_solo_out_features, run_starsolo_sparse.out.star_solo_out_barcodes, "_sparse_${output}")
+    format_star_output_sparse(run_starsolo_sparse.out.star_solo_mtx, run_starsolo_sparse.out.star_solo_features, run_starsolo_sparse.out.star_solo_barcodes, "_sparse_${output}")
 
   emit:
     cellranger_out = cellranger_count.out.cellranger_output
