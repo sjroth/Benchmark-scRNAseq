@@ -3,9 +3,10 @@
 nextflow.enable.dsl = 2
 
 include { download_testdata_1k; download_testdata_5k; download_testdata_nuclei; prefetch; fastq_dump; pigz; download_reference; download_reference_mouse; download_barcodes; download_barcodes_10xv2 } from './download_prereqs'
-include { full_star_index; sparse_star_index; run_starsolo as run_starsolo_full; run_starsolo as run_starsolo_sparse } from './run-star'
+include { full_star_index; sparse_star_index; run_starsolo as run_starsolo_full; run_starsolo as run_starsolo_sparse; format_star_output as format_star_output_full; format_star_output as format_star_output_sparse } from './run-star'
 include { transcriptome; transcript_to_gene; splici; remove_t2g_col; generate_salmon_index as generate_salmon_cDNA_index; generate_salmon_index as generate_salmon_splici_index; generate_sparse_salmon_index } from './run-alevin'
 include { cellranger_count } from './run-cellranger'
+include { salmon_map_and_quant as alevin_quant_cDNA; salmon_map_and_quant as alevin_quant_splici_full; salmon_map_and_quant as alevin_quant_splici_sparse } from './alevin-subworkflows'
 
 /*
  * Download prerequisites and emit their resulting downloads.
@@ -112,13 +113,18 @@ workflow get_exp {
   main:
 
     cellranger_count(cellranger_reference, fastq_path, count_mode, output)
-    run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry, "STARsolo-Full-${output}")
-    run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry, "STARsolo-Sparse-${output}")
+
+    run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry)
+    format_star_output_full(run_starsolo_full.out.star_solo_out_mtx, run_starsolo_full.out.star_solo_out_features, run_starsolo_full.out.star_solo_out_barcodes, "_full_${output}")
+
+    run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry)
+    format_star_output_sparse(run_starsolo_sparse.out.star_solo_out_mtx, run_starsolo_sparse.out.star_solo_out_features, run_starsolo_sparse.out.star_solo_out_barcodes, "_sparse_${output}")
 
   emit:
     cellranger_out = cellranger_count.out.cellranger_output
-    starsolo_full_out = run_starsolo_full.out.star_solo_dir
-    starsolo_sparse_out = run_starsolo_sparse.out.star_solo_dir
+
+    star_solo_outdir_full = format_star_output_full.out.star_solo_outdir
+    star_solo_outdir_sparse = format_star_output_sparse.out.star_solo_outdir
 }
 
 workflow salmon_cDNA {
