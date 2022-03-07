@@ -58,9 +58,9 @@ process run_starsolo {
 
   output:
     path "Solo.out", emit: star_solo_outdir
-    path "Solo.out/Gene/filtered/matrix.mtx", emit: star_solo_mtx
-    path "Solo.out/Gene/filtered/features.tsv", emit: star_solo_features
-    path "Solo.out/Gene/filtered/barcodes.tsv", emit: star_solo_barcodes
+    path "Solo.out/*/filtered/matrix.mtx", emit: star_solo_mtx
+    path "Solo.out/*/filtered/features.tsv", emit: star_solo_features
+    path "Solo.out/*/filtered/barcodes.tsv", emit: star_solo_barcodes
 
   script:
     all_r1 = "${read1_files.join(',')}"
