@@ -96,6 +96,9 @@ workflow get_exp {
     cellranger_reference
     star_idx_full
     star_idx_sparse
+    salmon_cdna_index
+    salmon_splici_index
+    salmon_sparse_index
 
     // Data paths
     fastq_path
@@ -106,6 +109,10 @@ workflow get_exp {
     count_mode
     barcode_list
     chemistry
+
+    // Alevin transcript-to-gene mappings
+    salmon_cdna_t2g
+    salmon_splici_t2g
 
     // Output
     output
@@ -120,45 +127,23 @@ workflow get_exp {
     run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry)
     format_star_output_sparse(run_starsolo_sparse.out.star_solo_mtx, run_starsolo_sparse.out.star_solo_features, run_starsolo_sparse.out.star_solo_barcodes, "sparse_${output}")
 
+    alevin_quant_cDNA(salmon_cdna_index, salmon_cdna_t2g, read1_files, read2_files, "${output}-cDNA")
+
+    alevin_quant_splici_full(salmon_splici_index, salmon_splici_t2g, read1_files, read2_files, "${output}-splici-full")
+    alevin_quant_splici_sparse(salmon_sparse_index, salmon_splici_t2g, read1_files, read2_files, "${output}-splici-sparse")
+
   emit:
     cellranger_out = cellranger_count.out.cellranger_output
 
     star_solo_outdir_full = format_star_output_full.out.star_solo_outdir
     star_solo_outdir_sparse = format_star_output_sparse.out.star_solo_outdir
-}
 
-workflow salmon_cDNA {
-  take:
-    genome
-    gtf
-    read1_files
-    read2_files
-  main:
-    transcriptome(genome,gtf)
-    transcript_to_gene(gtf)
-    generate_salmon_index(transcriptome.out.transcripts)
-    salmon_map_and_quant(generate_salmon_index.out.salmon_index, transcript_to_gene.out.t2g, read1_files, read2_files, 'salmon-cDNA')
-  emit:
-    salmon_sel_quant_res = salmon_map_and_quant.out.salmon_sel_quant_res
-    salmon_sketch_quant_res = salmon_map_and_quant.out.salmon_sketch_quant_res
-}
+    alevin_cDNA_sel_quant = alevin_quant_cDNA.out.salmon_sel_quant_res
+    alevin_cDNA_sketch_quant = alevin_quant_cDNA.out.salmon_sketch_quant_res
 
-workflow salmon_splici {
-  take:
-    gtf
-    genome
-    read1_files
-    read2_files
-  main:
-    splici(gtf,genome)
-    remove_t2g_col(splici.out.t2g_3col)
-    generate_salmon_index(splici.out.transcripts)
-    generate_sparse_salmon_index(splici.out.transcripts)
-    salmon_quant_full_index(generate_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files, 'salmon-splici-full')
-    salmon_quant_sparse_index(generate_sparse_salmon_index.out.salmon_index, remove_t2g_col.out.t2g, read1_files, read2_files, 'salmon-splici-sparse')
-  emit:
-    salmon_sel_full_quant_res = salmon_quant_full_index.out.salmon_sel_quant_res
-    salmon_sketch_full_quant_res = salmon_quant_full_index.out.salmon_sketch_quant_res
-    salmon_sel_sparse_quant_res = salmon_quant_sparse_index.out.salmon_sel_quant_res
-    salmon_sketch_sparse_quant_res = salmon_quant_sparse_index.out.salmon_sketch_quant_res
+    alevin_splici_full_sel_quant = alevin_quant_splici_full.out.salmon_sel_quant_res
+    alevin_splici_full_sketch_quant = alevin_quant_splici_full.out.salmon_sketch_quant_res
+
+    alevin_splici_sparse_sel_quant = alevin_quant_splici_sparse.out.salmon_sel_quant_res
+    alevin_splici_sparse_sketch_quant = alevin_quant_splici_sparse.out.salmon_sketch_quant_res
 }

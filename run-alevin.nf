@@ -159,11 +159,11 @@ process collate_rad_file_and_quant {
     file t2g
     val out_name
   output:
-    path "$out_name", emit: salmon_quant_res
+    path "alevin-${out_name}", emit: salmon_quant_res
   script:
     """
     alevin-fry collate -t ${task.cpus} -i $salmon_quant -r $salmon_map
-    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o $out_name --tg-map $t2g --resolution cr-like --use-mtx
+    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o alevin-${out_name} --tg-map $t2g --resolution cr-like --use-mtx
     """
 }
 
