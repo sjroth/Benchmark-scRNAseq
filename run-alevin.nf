@@ -190,7 +190,7 @@ process collate_rad_file_and_quant {
 
 process format_alevin_output {
   publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
-  
+
   input:
     path alevin_mtx
     path alevin_features
@@ -207,7 +207,7 @@ process format_alevin_output {
     cp $alevin_mtx alevin-${output}/matrix.mtx
     cp $alevin_features alevin-${output}/features.tsv
     cp $alevin_barcodes alevin-${output}/barcodes.tsv
-    gzip alevin-${output}
+    gzip alevin-${output}/*
     """
 }
 
