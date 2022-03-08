@@ -108,11 +108,20 @@ process salmon_sel_mapping {
     path read1_files
     path read2_files
     file t2g
+    val chemistry
   output:
     path 'salmon-map', emit: salmon_map
   script:
+
+    if( chemistry == 'v3' )
+      chem_cmd = '--chromiumV3'
+    else if( chemistry == 'v2' )
+      chem_cmd = '--chromium'
+    else
+      error "Invalid 10X Chemistry"
+
     """
-    salmon alevin -i $salmon_index -p ${task.cpus} -l IU --chromiumV3 -1 $read1_files -2 $read2_files -o salmon-map --tgMap $t2g --rad
+    salmon alevin -i $salmon_index -p ${task.cpus} -l IU $chem_cmd -1 $read1_files -2 $read2_files -o salmon-map --tgMap $t2g --rad
     """
 }
 

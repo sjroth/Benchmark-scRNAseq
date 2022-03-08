@@ -127,10 +127,10 @@ workflow get_exp {
     run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry)
     format_star_output_sparse(run_starsolo_sparse.out.star_solo_mtx, run_starsolo_sparse.out.star_solo_features, run_starsolo_sparse.out.star_solo_barcodes, "sparse_${output}")
 
-    alevin_quant_cDNA(salmon_cdna_index, salmon_cdna_t2g, read1_files, read2_files, "${output}-cDNA")
+    alevin_quant_cDNA(salmon_cdna_index, salmon_cdna_t2g, read1_files, read2_files, chemistry, "${output}-cDNA")
 
-    alevin_quant_splici_full(salmon_splici_index, salmon_splici_t2g, read1_files, read2_files, "${output}-splici-full")
-    alevin_quant_splici_sparse(salmon_sparse_index, salmon_splici_t2g, read1_files, read2_files, "${output}-splici-sparse")
+    alevin_quant_splici_full(salmon_splici_index, salmon_splici_t2g, read1_files, read2_files, chemistry, "${output}-splici-full")
+    alevin_quant_splici_sparse(salmon_sparse_index, salmon_splici_t2g, read1_files, read2_files, chemistry, "${output}-splici-sparse")
 
   emit:
     cellranger_out = cellranger_count.out.cellranger_output
