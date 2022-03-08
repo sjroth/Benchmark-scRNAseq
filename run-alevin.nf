@@ -172,7 +172,6 @@ process generate_permit_list {
  * Perform quantification.
  */
 process collate_rad_file_and_quant {
-  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
 
   input:
     path salmon_quant
@@ -190,6 +189,8 @@ process collate_rad_file_and_quant {
 }
 
 process format_alevin_output {
+  publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
+  
   input:
     path alevin_mtx
     path alevin_features
