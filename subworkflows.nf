@@ -122,10 +122,10 @@ workflow get_exp {
     cellranger_count(cellranger_reference, fastq_path, count_mode, output)
 
     run_starsolo_full(read1_files, read2_files, barcode_list, star_idx_full, count_mode, chemistry)
-    format_star_output_full(run_starsolo_full.out.star_solo_mtx, run_starsolo_full.out.star_solo_features, run_starsolo_full.out.star_solo_barcodes, "full_${output}")
+    format_star_output_full(run_starsolo_full.out.star_solo_mtx, run_starsolo_full.out.star_solo_features, run_starsolo_full.out.star_solo_barcodes, "full-${output}")
 
     run_starsolo_sparse(read1_files, read2_files, barcode_list, star_idx_sparse, count_mode, chemistry)
-    format_star_output_sparse(run_starsolo_sparse.out.star_solo_mtx, run_starsolo_sparse.out.star_solo_features, run_starsolo_sparse.out.star_solo_barcodes, "sparse_${output}")
+    format_star_output_sparse(run_starsolo_sparse.out.star_solo_mtx, run_starsolo_sparse.out.star_solo_features, run_starsolo_sparse.out.star_solo_barcodes, "sparse-${output}")
 
     alevin_quant_cDNA(salmon_cdna_index, salmon_cdna_t2g, read1_files, read2_files, chemistry, "${output}-cDNA")
 
@@ -138,12 +138,12 @@ workflow get_exp {
     star_solo_outdir_full = format_star_output_full.out.star_solo_outdir
     star_solo_outdir_sparse = format_star_output_sparse.out.star_solo_outdir
 
-    alevin_cDNA_sel_quant = alevin_quant_cDNA.out.salmon_sel_quant_res
-    alevin_cDNA_sketch_quant = alevin_quant_cDNA.out.salmon_sketch_quant_res
+    alevin_cDNA_sel_outdir = alevin_quant_cDNA.out.salmon_sel_outdir
+    alevin_cDNA_sketch_quant = alevin_quant_cDNA.out.salmon_sketch_outdir
 
-    alevin_splici_full_sel_quant = alevin_quant_splici_full.out.salmon_sel_quant_res
-    alevin_splici_full_sketch_quant = alevin_quant_splici_full.out.salmon_sketch_quant_res
+    alevin_splici_full_sel_quant = alevin_quant_splici_full.out.salmon_sel_outdir
+    alevin_splici_full_sketch_quant = alevin_quant_splici_full.out.salmon_sketch_outdir
 
-    alevin_splici_sparse_sel_quant = alevin_quant_splici_sparse.out.salmon_sel_quant_res
-    alevin_splici_sparse_sketch_quant = alevin_quant_splici_sparse.out.salmon_sketch_quant_res
+    alevin_splici_sparse_sel_quant = alevin_quant_splici_sparse.out.salmon_sel_outdir
+    alevin_splici_sparse_sketch_quant = alevin_quant_splici_sparse.out.salmon_sketch_outdir
 }

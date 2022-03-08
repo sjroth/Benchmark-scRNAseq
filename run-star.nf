@@ -85,6 +85,9 @@ process run_starsolo {
     """
 }
 
+/*
+ * Reformat output so that it matches standard Cell Ranger output.
+ */
 process format_star_output {
   publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
 
@@ -94,14 +97,14 @@ process format_star_output {
     path star_solo_barcodes
     val output
   output:
-    path "STARsolo_${output}", emit: star_solo_outdir
-    path "STARsolo_${output}/matrix.mtx.gz", emit: star_solo_out_mtx
-    path "STARsolo_${output}/features.tsv.gz", emit: star_solo_out_features
-    path "STARsolo_${output}/barcodes.tsv.gz", emit: star_solo_out_barcodes
+    path "STARsolo-${output}", emit: star_solo_outdir
+    path "STARsolo-${output}/matrix.mtx.gz", emit: star_solo_out_mtx
+    path "STARsolo-${output}/features.tsv.gz", emit: star_solo_out_features
+    path "STARsolo-${output}/barcodes.tsv.gz", emit: star_solo_out_barcodes
   script:
     """
-    mkdir STARsolo_${output}
-    cp $star_solo_mtx $star_solo_features $star_solo_barcodes STARsolo_${output}
-    gzip STARsolo_${output}/*
+    mkdir STARsolo-${output}
+    cp $star_solo_mtx $star_solo_features $star_solo_barcodes STARsolo-${output}
+    gzip STARsolo-${output}/*
     """
 }

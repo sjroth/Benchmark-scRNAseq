@@ -18,6 +18,6 @@ workflow salmon_map_and_quant {
     salmon_sketch_mapping(salmon_index, read1_files, read2_files, t2g, chemistry)
     salmon_sketch_quant(salmon_sketch_mapping.out.salmon_map, t2g, out_prefix+'-sketch-quant-res')
   emit:
-    salmon_sel_quant_res = salmon_sel_quant.out.salmon_quant_res
-    salmon_sketch_quant_res = salmon_sketch_quant.out.salmon_quant_res
+    salmon_sel_outdir = salmon_sel_quant.out.alevin_outdir
+    salmon_sketch_outdir = salmon_sketch_quant.out.alevin_outdir
 }

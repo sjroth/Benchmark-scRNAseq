@@ -44,6 +44,9 @@ process run_kb_count {
 
 }
 
+/*
+ * Reformat output so that it matches Cell Ranger output.
+ */
 process format_kb_output {
   publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: 'copy'
 

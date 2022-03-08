@@ -102,6 +102,9 @@ process generate_sparse_salmon_index {
     """
 }
 
+/*
+ * Perform selective mapping.
+ */
 process salmon_sel_mapping {
   input:
     path salmon_index
@@ -125,6 +128,9 @@ process salmon_sel_mapping {
     """
 }
 
+/*
+ * Perform sketch mapping.
+ */
 process salmon_sketch_mapping {
   input:
     path salmon_index
@@ -148,6 +154,9 @@ process salmon_sketch_mapping {
     """
 }
 
+/*
+ * Get list of called cell barcodes.
+ */
 process generate_permit_list {
   input:
     path salmon_map
@@ -159,6 +168,9 @@ process generate_permit_list {
     """
 }
 
+/*
+ * Perform quantification.
+ */
 process collate_rad_file_and_quant {
   publishDir "s3://fulcrumtx-users/sroth/Benchmark-scRNAseq/", mode: "copy"
 
@@ -166,13 +178,35 @@ process collate_rad_file_and_quant {
     path salmon_quant
     path salmon_map
     file t2g
-    val out_name
   output:
-    path "alevin-${out_name}", emit: salmon_quant_res
+    path "alevin-out/alevin/quants_mat.mtx", emit: alevin_mtx
+    path "alevin-out/alevin/quants_mat_cols.txt", emit: alevin_features
+    path "alevin-out/alevin/quants_mat_rows.txt", emit: alevin_barcodes
   script:
     """
     alevin-fry collate -t ${task.cpus} -i $salmon_quant -r $salmon_map
-    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o alevin-${out_name} --tg-map $t2g --resolution cr-like --use-mtx
+    alevin-fry quant -t ${task.cpus} -i $salmon_quant -o alevin-out --tg-map $t2g --resolution cr-like --use-mtx
+    """
+}
+
+process format_alevin_output {
+  input:
+    path alevin_mtx
+    path alevin_features
+    path alevin_barcodes
+    val output
+  output:
+    path "alevin-${output}", emit: alevin_outdir
+    path "alevin-${output}/matrix.mtx.gz", emit: alevin_out_mtx
+    path "alevin-${output}/features.tsv.gz", emit: alevin_out_features
+    path "alevin-${output}/barcodes.tsv.gz", emit: alevin_out_mtx
+  script:
+    """
+    mkdir alevin-${output}
+    cp $alevin_mtx alevin-${output}/matrix.mtx
+    cp $alevin_features alevin-${output}/features.tsv
+    cp $alevin_barcodes alevin-${output}/barcodes.tsv
+    gzip alevin-${output}
     """
 }
 
@@ -183,10 +217,11 @@ workflow salmon_quant {
   take:
     salmon_map
     t2g
-    out_name
+    output
   main:
     generate_permit_list(salmon_map)
-    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant, salmon_map, t2g, out_name)
+    collate_rad_file_and_quant(generate_permit_list.out.salmon_quant, salmon_map, t2g)
+    format_alevin_output(collate_rad_file_and_quant.out.alevin_mtx, collate_rad_file_and_quant.out.alevin_features, collate_rad_file_and_quant.out.alevin_barcodes, output)
   emit:
-    salmon_quant_res = collate_rad_file_and_quant.out.salmon_quant_res
+    alevin_outdir = format_alevin_output.out.alevin_outdir
 }
