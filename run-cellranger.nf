@@ -29,7 +29,9 @@ process cellranger_count {
       error "Invalid Count Mode"
 
     """
-    cellranger count --id ${output}/cellranger --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
+    mkdir $output
+    cd $output
+    cellranger count --id cellranger --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
     """
 
 }
