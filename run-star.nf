@@ -103,7 +103,7 @@ process format_star_output {
     path "${output}/barcodes.tsv.gz", emit: star_solo_out_barcodes
   script:
     """
-    mkdir $output
+    mkdir -p $output
     cp $star_solo_mtx $star_solo_features $star_solo_barcodes $output
     gzip ${output}/*
     """

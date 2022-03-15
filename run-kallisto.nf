@@ -62,7 +62,7 @@ process format_kb_output {
     path "${output}/barcodes.tsv.gz", emit: kallisto_out_barcodes
   script:
     """
-    mkdir $output
+    mkdir -p $output
     cp $kallisto_mtx ${output}/matrix.mtx
     cp $kallisto_features ${output}/features.tsv
     cp $kallisto_barcodes ${output}/barcodes.tsv

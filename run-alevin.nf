@@ -203,7 +203,7 @@ process format_alevin_output {
     path "${output}/barcodes.tsv.gz", emit: alevin_out_barcodes
   script:
     """
-    mkdir $output
+    mkdir -p $output
     cp $alevin_mtx ${output}/matrix.mtx
     cp $alevin_features ${output}/features.tsv
     cp $alevin_barcodes ${output}/barcodes.tsv
