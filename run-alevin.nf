@@ -197,17 +197,17 @@ process format_alevin_output {
     path alevin_barcodes
     val output
   output:
-    path "alevin-${output}", emit: alevin_outdir
-    path "alevin-${output}/matrix.mtx.gz", emit: alevin_out_mtx
-    path "alevin-${output}/features.tsv.gz", emit: alevin_out_features
-    path "alevin-${output}/barcodes.tsv.gz", emit: alevin_out_barcodes
+    path "$output", emit: alevin_outdir
+    path "${output}/matrix.mtx.gz", emit: alevin_out_mtx
+    path "${output}/features.tsv.gz", emit: alevin_out_features
+    path "${output}/barcodes.tsv.gz", emit: alevin_out_barcodes
   script:
     """
-    mkdir alevin-${output}
-    cp $alevin_mtx alevin-${output}/matrix.mtx
-    cp $alevin_features alevin-${output}/features.tsv
-    cp $alevin_barcodes alevin-${output}/barcodes.tsv
-    gzip alevin-${output}/*
+    mkdir $output
+    cp $alevin_mtx ${output}/matrix.mtx
+    cp $alevin_features ${output}/features.tsv
+    cp $alevin_barcodes ${output}/barcodes.tsv
+    gzip ${output}/*
     """
 }
 

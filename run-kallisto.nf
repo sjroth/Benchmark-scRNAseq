@@ -56,16 +56,16 @@ process format_kb_output {
     path kallisto_barcodes
     val output
   output:
-    path "kallisto-${output}", emit: kallisto_outdir
-    path "kallisto-${output}/matrix.mtx.gz", emit: kallisto_out_mtx
-    path "kallisto-${output}/features.tsv.gz", emit: kallisto_out_features
-    path "kallisto-${output}/barcodes.tsv.gz", emit: kallisto_out_barcodes
+    path "$output", emit: kallisto_outdir
+    path "${output}/matrix.mtx.gz", emit: kallisto_out_mtx
+    path "${output}/features.tsv.gz", emit: kallisto_out_features
+    path "${output}/barcodes.tsv.gz", emit: kallisto_out_barcodes
   script:
     """
-    mkdir kallisto-${output}
-    cp $kallisto_mtx kallisto-${output}/matrix.mtx
-    cp $kallisto_features kallisto-${output}/features.tsv
-    cp $kallisto_barcodes kallisto-${output}/barcodes.tsv
-    gzip kallisto-${output}/*
+    mkdir $output
+    cp $kallisto_mtx ${output}/matrix.mtx
+    cp $kallisto_features ${output}/features.tsv
+    cp $kallisto_barcodes ${output}/barcodes.tsv
+    gzip ${output}/*
     """
 }

@@ -15,7 +15,7 @@ process cellranger_count {
     val output
 
   output:
-    path "cellranger-${output}/outs", emit: cellranger_output
+    path "${output}/cellranger/outs", emit: cellranger_output
 
   script:
 
@@ -29,7 +29,7 @@ process cellranger_count {
       error "Invalid Count Mode"
 
     """
-    cellranger count --id cellranger-${output} --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
+    cellranger count --id ${output}/cellranger --transcriptome $transcriptome --fastqs $fastq_path --nosecondary --disable-ui --nopreflight --no-bam --localcores ${task.cpus} $count_cmd
     """
 
 }

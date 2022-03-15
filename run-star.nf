@@ -97,14 +97,14 @@ process format_star_output {
     path star_solo_barcodes
     val output
   output:
-    path "STARsolo-${output}", emit: star_solo_outdir
-    path "STARsolo-${output}/matrix.mtx.gz", emit: star_solo_out_mtx
-    path "STARsolo-${output}/features.tsv.gz", emit: star_solo_out_features
-    path "STARsolo-${output}/barcodes.tsv.gz", emit: star_solo_out_barcodes
+    path "$output", emit: star_solo_outdir
+    path "${output}/matrix.mtx.gz", emit: star_solo_out_mtx
+    path "${output}/features.tsv.gz", emit: star_solo_out_features
+    path "${output}/barcodes.tsv.gz", emit: star_solo_out_barcodes
   script:
     """
-    mkdir STARsolo-${output}
-    cp $star_solo_mtx $star_solo_features $star_solo_barcodes STARsolo-${output}
-    gzip STARsolo-${output}/*
+    mkdir $output
+    cp $star_solo_mtx $star_solo_features $star_solo_barcodes $output
+    gzip ${output}/*
     """
 }
